@@ -757,7 +757,7 @@ namespace Move_Files
                 bWindowMoving = true;
                 Sx = e.X;
                 Sy = e.Y;
-            }            
+            }
         }
 
         private void comboFilesToMove_SelectedIndexChanged(object sender, EventArgs e)
@@ -878,8 +878,8 @@ namespace Move_Files
 
         private void BGWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
-            LabelXMLProgress.Text = $"{copiedXMLFiles} of {totalXMLFiles} XML files copied. {errorXMLFiles} errors.";
-            LabelTIFProgress.Text = $"{copiedTIFFiles} of {totalTIFFiles} TIF files copied. {errorTIFFiles} errors.";
+            LabelXMLProgress.Text = $"{copiedXMLFiles} of {totalXMLFiles} XML files moved. {errorXMLFiles} errors.";
+            LabelTIFProgress.Text = $"{copiedTIFFiles} of {totalTIFFiles} TIF files moved. {errorTIFFiles} errors.";
             LabelMoveSize.Text = $"Moved {(float)totalCopiedSize / (1024 * 1024)} MB of {(float)totalFileSize / (1024 * 1024)} MB at {((float)totalCopiedSize / (1024 * 1024 * timer.Elapsed.TotalSeconds)).ToString("00.00") } MBps";
             ProgressBar.Value = e.ProgressPercentage;
         }
@@ -898,7 +898,7 @@ namespace Move_Files
             {
                 Status.Text = "Done!";
                 ProgressBar.Value = 0;
-                if(totalXMLFiles==0 && totalTIFFiles == 0)
+                if (totalXMLFiles == 0 && totalTIFFiles == 0)
                 {
                     LabelXMLProgress.Text = string.Empty;
                     LabelTIFProgress.Text = string.Empty;
@@ -907,7 +907,7 @@ namespace Move_Files
                 else
                 {
                     LabelMoveSize.Text = $"{(float)totalCopiedSize / (1024 * 1024)} MB moved in {timer.Elapsed.TotalSeconds} seconds at {((float)totalCopiedSize / (1024 * 1024 * timer.Elapsed.TotalSeconds)).ToString("00.00")} MBps";
-                }                
+                }
             }
         }
 
