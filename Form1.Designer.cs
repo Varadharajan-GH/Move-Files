@@ -55,19 +55,27 @@
             this.BGWorker = new System.ComponentModel.BackgroundWorker();
             this.btnCancel = new System.Windows.Forms.Button();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.cbCreateTIFLog = new System.Windows.Forms.CheckBox();
+            this.cbCreateXMLLog = new System.Windows.Forms.CheckBox();
             this.btnInvertPaths = new System.Windows.Forms.Button();
+            this.label9 = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
             this.LabelXMLProgress = new System.Windows.Forms.Label();
             this.LabelTIFProgress = new System.Windows.Forms.Label();
             this.LabelMoveSize = new System.Windows.Forms.Label();
             this.LabelHelp = new System.Windows.Forms.Label();
             this.ToolTip = new System.Windows.Forms.ToolTip(this.components);
-            this.cbCreateXMLLog = new System.Windows.Forms.CheckBox();
-            this.label9 = new System.Windows.Forms.Label();
-            this.cbCreateTIFLog = new System.Windows.Forms.CheckBox();
+            this.panelTitleBar = new System.Windows.Forms.Panel();
+            this.LabelMinimize = new System.Windows.Forms.Label();
+            this.label10 = new System.Windows.Forms.Label();
+            this.rbVIL = new System.Windows.Forms.RadioButton();
+            this.rbFCR = new System.Windows.Forms.RadioButton();
+            this.label11 = new System.Windows.Forms.Label();
+            this.comboFilesToMove = new System.Windows.Forms.ComboBox();
             this.ToolStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.ErrorProvider)).BeginInit();
             this.panel1.SuspendLayout();
+            this.panelTitleBar.SuspendLayout();
             this.SuspendLayout();
             // 
             // LabelClose
@@ -77,7 +85,7 @@
             this.LabelClose.BackColor = System.Drawing.Color.Transparent;
             this.LabelClose.Font = new System.Drawing.Font("Century Gothic", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.LabelClose.ForeColor = System.Drawing.Color.Black;
-            this.LabelClose.Location = new System.Drawing.Point(451, 0);
+            this.LabelClose.Location = new System.Drawing.Point(437, 1);
             this.LabelClose.Name = "LabelClose";
             this.LabelClose.Size = new System.Drawing.Size(18, 19);
             this.LabelClose.TabIndex = 0;
@@ -92,7 +100,7 @@
             // 
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(2, 2);
+            this.label1.Location = new System.Drawing.Point(3, 3);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(159, 17);
             this.label1.TabIndex = 1;
@@ -119,7 +127,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(5, 6);
+            this.label4.Location = new System.Drawing.Point(10, 6);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(66, 13);
             this.label4.TabIndex = 3;
@@ -190,7 +198,7 @@
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(5, 97);
+            this.label7.Location = new System.Drawing.Point(10, 97);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(56, 13);
             this.label7.TabIndex = 3;
@@ -268,10 +276,10 @@
             this.ToolStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.ProgressBar,
             this.Status});
-            this.ToolStrip.Location = new System.Drawing.Point(0, 390);
+            this.ToolStrip.Location = new System.Drawing.Point(0, 408);
             this.ToolStrip.Name = "ToolStrip";
             this.ToolStrip.RenderMode = System.Windows.Forms.ToolStripRenderMode.Professional;
-            this.ToolStrip.Size = new System.Drawing.Size(469, 25);
+            this.ToolStrip.Size = new System.Drawing.Size(456, 25);
             this.ToolStrip.TabIndex = 8;
             this.ToolStrip.Text = "toolStrip1";
             // 
@@ -337,95 +345,10 @@
             this.panel1.Controls.Add(this.btnChooseSourceXML);
             this.panel1.Controls.Add(this.textBoxDestTIF);
             this.panel1.Controls.Add(this.textBoxDestXML);
-            this.panel1.Location = new System.Drawing.Point(5, 22);
+            this.panel1.Location = new System.Drawing.Point(5, 66);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(458, 246);
+            this.panel1.Size = new System.Drawing.Size(445, 246);
             this.panel1.TabIndex = 10;
-            // 
-            // btnInvertPaths
-            // 
-            this.btnInvertPaths.Location = new System.Drawing.Point(260, 211);
-            this.btnInvertPaths.Name = "btnInvertPaths";
-            this.btnInvertPaths.Size = new System.Drawing.Size(75, 23);
-            this.btnInvertPaths.TabIndex = 10;
-            this.btnInvertPaths.Text = "&Invert Paths";
-            this.ToolTip.SetToolTip(this.btnInvertPaths, "Invert source and Destination paths");
-            this.btnInvertPaths.UseVisualStyleBackColor = true;
-            this.btnInvertPaths.Click += new System.EventHandler(this.btnInvertPaths_Click);
-            // 
-            // label8
-            // 
-            this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(10, 284);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(57, 13);
-            this.label8.TabIndex = 12;
-            this.label8.Text = "Progress : ";
-            // 
-            // LabelXMLProgress
-            // 
-            this.LabelXMLProgress.AutoSize = true;
-            this.LabelXMLProgress.Location = new System.Drawing.Point(32, 311);
-            this.LabelXMLProgress.Name = "LabelXMLProgress";
-            this.LabelXMLProgress.Size = new System.Drawing.Size(73, 13);
-            this.LabelXMLProgress.TabIndex = 13;
-            this.LabelXMLProgress.Text = "XML Progress";
-            // 
-            // LabelTIFProgress
-            // 
-            this.LabelTIFProgress.AutoSize = true;
-            this.LabelTIFProgress.Location = new System.Drawing.Point(32, 337);
-            this.LabelTIFProgress.Name = "LabelTIFProgress";
-            this.LabelTIFProgress.Size = new System.Drawing.Size(67, 13);
-            this.LabelTIFProgress.TabIndex = 13;
-            this.LabelTIFProgress.Text = "TIF Progress";
-            // 
-            // LabelMoveSize
-            // 
-            this.LabelMoveSize.AutoSize = true;
-            this.LabelMoveSize.Location = new System.Drawing.Point(32, 363);
-            this.LabelMoveSize.Name = "LabelMoveSize";
-            this.LabelMoveSize.Size = new System.Drawing.Size(40, 13);
-            this.LabelMoveSize.TabIndex = 14;
-            this.LabelMoveSize.Text = "Moved";
-            // 
-            // LabelHelp
-            // 
-            this.LabelHelp.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.LabelHelp.AutoSize = true;
-            this.LabelHelp.BackColor = System.Drawing.Color.Transparent;
-            this.LabelHelp.Font = new System.Drawing.Font("Arial Narrow", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelHelp.ForeColor = System.Drawing.Color.Black;
-            this.LabelHelp.Location = new System.Drawing.Point(435, 0);
-            this.LabelHelp.Name = "LabelHelp";
-            this.LabelHelp.Size = new System.Drawing.Size(14, 17);
-            this.LabelHelp.TabIndex = 15;
-            this.LabelHelp.Text = "?";
-            this.LabelHelp.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.ToolTip.SetToolTip(this.LabelHelp, "About");
-            this.LabelHelp.Click += new System.EventHandler(this.LabelHelp_Click);
-            this.LabelHelp.MouseEnter += new System.EventHandler(this.LabelHelp_MouseEnter);
-            this.LabelHelp.MouseLeave += new System.EventHandler(this.LabelHelp_MouseLeave);
-            // 
-            // cbCreateXMLLog
-            // 
-            this.cbCreateXMLLog.AutoSize = true;
-            this.cbCreateXMLLog.Location = new System.Drawing.Point(179, 187);
-            this.cbCreateXMLLog.Name = "cbCreateXMLLog";
-            this.cbCreateXMLLog.Size = new System.Drawing.Size(72, 17);
-            this.cbCreateXMLLog.TabIndex = 11;
-            this.cbCreateXMLLog.Text = "XML Files";
-            this.cbCreateXMLLog.UseVisualStyleBackColor = true;
-            this.cbCreateXMLLog.CheckedChanged += new System.EventHandler(this.cbCreateXMLLog_CheckedChanged);
-            // 
-            // label9
-            // 
-            this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(95, 187);
-            this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(79, 13);
-            this.label9.TabIndex = 12;
-            this.label9.Text = "Create Logs for";
             // 
             // cbCreateTIFLog
             // 
@@ -438,31 +361,202 @@
             this.cbCreateTIFLog.UseVisualStyleBackColor = true;
             this.cbCreateTIFLog.CheckedChanged += new System.EventHandler(this.cbCreateTIFLog_CheckedChanged);
             // 
+            // cbCreateXMLLog
+            // 
+            this.cbCreateXMLLog.AutoSize = true;
+            this.cbCreateXMLLog.Location = new System.Drawing.Point(179, 187);
+            this.cbCreateXMLLog.Name = "cbCreateXMLLog";
+            this.cbCreateXMLLog.Size = new System.Drawing.Size(72, 17);
+            this.cbCreateXMLLog.TabIndex = 11;
+            this.cbCreateXMLLog.Text = "XML Files";
+            this.cbCreateXMLLog.UseVisualStyleBackColor = true;
+            this.cbCreateXMLLog.CheckedChanged += new System.EventHandler(this.cbCreateXMLLog_CheckedChanged);
+            // 
+            // btnInvertPaths
+            // 
+            this.btnInvertPaths.Location = new System.Drawing.Point(260, 211);
+            this.btnInvertPaths.Name = "btnInvertPaths";
+            this.btnInvertPaths.Size = new System.Drawing.Size(75, 23);
+            this.btnInvertPaths.TabIndex = 10;
+            this.btnInvertPaths.Text = "&Invert Paths";
+            this.ToolTip.SetToolTip(this.btnInvertPaths, "Invert source and Destination paths");
+            this.btnInvertPaths.UseVisualStyleBackColor = true;
+            this.btnInvertPaths.Click += new System.EventHandler(this.btnInvertPaths_Click);
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(95, 187);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(79, 13);
+            this.label9.TabIndex = 12;
+            this.label9.Text = "Create Logs for";
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(10, 319);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(57, 13);
+            this.label8.TabIndex = 12;
+            this.label8.Text = "Progress : ";
+            // 
+            // LabelXMLProgress
+            // 
+            this.LabelXMLProgress.AutoSize = true;
+            this.LabelXMLProgress.Location = new System.Drawing.Point(32, 341);
+            this.LabelXMLProgress.Name = "LabelXMLProgress";
+            this.LabelXMLProgress.Size = new System.Drawing.Size(73, 13);
+            this.LabelXMLProgress.TabIndex = 13;
+            this.LabelXMLProgress.Text = "XML Progress";
+            // 
+            // LabelTIFProgress
+            // 
+            this.LabelTIFProgress.AutoSize = true;
+            this.LabelTIFProgress.Location = new System.Drawing.Point(32, 363);
+            this.LabelTIFProgress.Name = "LabelTIFProgress";
+            this.LabelTIFProgress.Size = new System.Drawing.Size(67, 13);
+            this.LabelTIFProgress.TabIndex = 13;
+            this.LabelTIFProgress.Text = "TIF Progress";
+            // 
+            // LabelMoveSize
+            // 
+            this.LabelMoveSize.AutoSize = true;
+            this.LabelMoveSize.Location = new System.Drawing.Point(32, 385);
+            this.LabelMoveSize.Name = "LabelMoveSize";
+            this.LabelMoveSize.Size = new System.Drawing.Size(40, 13);
+            this.LabelMoveSize.TabIndex = 14;
+            this.LabelMoveSize.Text = "Moved";
+            // 
+            // LabelHelp
+            // 
+            this.LabelHelp.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.LabelHelp.BackColor = System.Drawing.Color.Transparent;
+            this.LabelHelp.Font = new System.Drawing.Font("Arial Narrow", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelHelp.ForeColor = System.Drawing.Color.Black;
+            this.LabelHelp.Location = new System.Drawing.Point(401, 1);
+            this.LabelHelp.Name = "LabelHelp";
+            this.LabelHelp.Size = new System.Drawing.Size(18, 19);
+            this.LabelHelp.TabIndex = 15;
+            this.LabelHelp.Text = "?";
+            this.LabelHelp.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.ToolTip.SetToolTip(this.LabelHelp, "About");
+            this.LabelHelp.Click += new System.EventHandler(this.LabelHelp_Click);
+            this.LabelHelp.MouseEnter += new System.EventHandler(this.LabelHelp_MouseEnter);
+            this.LabelHelp.MouseLeave += new System.EventHandler(this.LabelHelp_MouseLeave);
+            // 
+            // panelTitleBar
+            // 
+            this.panelTitleBar.Controls.Add(this.LabelMinimize);
+            this.panelTitleBar.Controls.Add(this.label1);
+            this.panelTitleBar.Controls.Add(this.LabelHelp);
+            this.panelTitleBar.Controls.Add(this.LabelClose);
+            this.panelTitleBar.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panelTitleBar.Location = new System.Drawing.Point(0, 0);
+            this.panelTitleBar.Name = "panelTitleBar";
+            this.panelTitleBar.Size = new System.Drawing.Size(456, 24);
+            this.panelTitleBar.TabIndex = 16;
+            this.panelTitleBar.MouseDown += new System.Windows.Forms.MouseEventHandler(this.panelTitleBar_MouseDown);
+            this.panelTitleBar.MouseMove += new System.Windows.Forms.MouseEventHandler(this.panelTitleBar_MouseMove);
+            this.panelTitleBar.MouseUp += new System.Windows.Forms.MouseEventHandler(this.panelTitleBar_MouseUp);
+            // 
+            // LabelMinimize
+            // 
+            this.LabelMinimize.BackColor = System.Drawing.Color.Transparent;
+            this.LabelMinimize.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelMinimize.Location = new System.Drawing.Point(419, 1);
+            this.LabelMinimize.Name = "LabelMinimize";
+            this.LabelMinimize.Size = new System.Drawing.Size(18, 19);
+            this.LabelMinimize.TabIndex = 22;
+            this.LabelMinimize.Text = "_";
+            this.LabelMinimize.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            this.LabelMinimize.Click += new System.EventHandler(this.LabelMinimize_Click);
+            this.LabelMinimize.MouseEnter += new System.EventHandler(this.LabelMinimize_MouseEnter);
+            this.LabelMinimize.MouseLeave += new System.EventHandler(this.LabelMinimize_MouseLeave);
+            // 
+            // label10
+            // 
+            this.label10.AutoSize = true;
+            this.label10.Location = new System.Drawing.Point(10, 36);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(81, 13);
+            this.label10.TabIndex = 17;
+            this.label10.Text = "Select Process ";
+            // 
+            // rbVIL
+            // 
+            this.rbVIL.AutoSize = true;
+            this.rbVIL.Location = new System.Drawing.Point(103, 35);
+            this.rbVIL.Name = "rbVIL";
+            this.rbVIL.Size = new System.Drawing.Size(41, 17);
+            this.rbVIL.TabIndex = 18;
+            this.rbVIL.TabStop = true;
+            this.rbVIL.Text = "VIL";
+            this.rbVIL.UseVisualStyleBackColor = true;
+            // 
+            // rbFCR
+            // 
+            this.rbFCR.AutoSize = true;
+            this.rbFCR.Location = new System.Drawing.Point(151, 35);
+            this.rbFCR.Name = "rbFCR";
+            this.rbFCR.Size = new System.Drawing.Size(46, 17);
+            this.rbFCR.TabIndex = 18;
+            this.rbFCR.TabStop = true;
+            this.rbFCR.Text = "FCR";
+            this.rbFCR.UseVisualStyleBackColor = true;
+            // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.Location = new System.Drawing.Point(269, 39);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(37, 13);
+            this.label11.TabIndex = 19;
+            this.label11.Text = "Move ";
+            // 
+            // comboFilesToMove
+            // 
+            this.comboFilesToMove.FormattingEnabled = true;
+            this.comboFilesToMove.Items.AddRange(new object[] {
+            "Both XML and TIF",
+            "XML only",
+            "TIF only"});
+            this.comboFilesToMove.Location = new System.Drawing.Point(312, 36);
+            this.comboFilesToMove.Name = "comboFilesToMove";
+            this.comboFilesToMove.Size = new System.Drawing.Size(138, 21);
+            this.comboFilesToMove.TabIndex = 20;
+            this.comboFilesToMove.SelectedIndexChanged += new System.EventHandler(this.comboFilesToMove_SelectedIndexChanged);
+            // 
             // FormMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(469, 415);
+            this.ClientSize = new System.Drawing.Size(456, 433);
             this.ControlBox = false;
-            this.Controls.Add(this.LabelHelp);
+            this.Controls.Add(this.comboFilesToMove);
+            this.Controls.Add(this.label11);
+            this.Controls.Add(this.rbFCR);
+            this.Controls.Add(this.rbVIL);
+            this.Controls.Add(this.label10);
+            this.Controls.Add(this.panelTitleBar);
             this.Controls.Add(this.LabelMoveSize);
             this.Controls.Add(this.LabelTIFProgress);
             this.Controls.Add(this.LabelXMLProgress);
             this.Controls.Add(this.label8);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.ToolStrip);
-            this.Controls.Add(this.label1);
-            this.Controls.Add(this.LabelClose);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Name = "FormMain";
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Form1";
+            this.Text = "Move Files";
             this.ToolStrip.ResumeLayout(false);
             this.ToolStrip.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.ErrorProvider)).EndInit();
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
+            this.panelTitleBar.ResumeLayout(false);
+            this.panelTitleBar.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -506,6 +600,13 @@
         private System.Windows.Forms.CheckBox cbCreateTIFLog;
         private System.Windows.Forms.CheckBox cbCreateXMLLog;
         private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.RadioButton rbFCR;
+        private System.Windows.Forms.RadioButton rbVIL;
+        private System.Windows.Forms.Label label10;
+        private System.Windows.Forms.Panel panelTitleBar;
+        private System.Windows.Forms.ComboBox comboFilesToMove;
+        private System.Windows.Forms.Label label11;
+        private System.Windows.Forms.Label LabelMinimize;
     }
 }
 
