@@ -56,6 +56,14 @@
             this.btnCancel = new System.Windows.Forms.Button();
             this.panel1 = new System.Windows.Forms.Panel();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.panel2 = new System.Windows.Forms.Panel();
+            this.label12 = new System.Windows.Forms.Label();
+            this.label8 = new System.Windows.Forms.Label();
+            this.textBoxMoveCount = new System.Windows.Forms.TextBox();
+            this.textBoxMovePercent = new System.Windows.Forms.TextBox();
+            this.rbMoveCount = new System.Windows.Forms.RadioButton();
+            this.rbMovePercent = new System.Windows.Forms.RadioButton();
+            this.rbMoveAll = new System.Windows.Forms.RadioButton();
             this.comboFilesToMove = new System.Windows.Forms.ComboBox();
             this.label9 = new System.Windows.Forms.Label();
             this.cbCreateTIFLog = new System.Windows.Forms.CheckBox();
@@ -78,6 +86,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.ErrorProvider)).BeginInit();
             this.panel1.SuspendLayout();
             this.groupBox1.SuspendLayout();
+            this.panel2.SuspendLayout();
             this.panelTitleBar.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.SuspendLayout();
@@ -143,7 +152,7 @@
             this.textBoxSourceTIF.Name = "textBoxSourceTIF";
             this.textBoxSourceTIF.Size = new System.Drawing.Size(280, 20);
             this.textBoxSourceTIF.TabIndex = 4;
-            this.textBoxSourceTIF.TextChanged += new System.EventHandler(this.textBoxSourceTIF_TextChanged);
+            this.textBoxSourceTIF.TextChanged += new System.EventHandler(this.TextBoxSourceTIF_TextChanged);
             // 
             // textBoxSourceXML
             // 
@@ -151,7 +160,7 @@
             this.textBoxSourceXML.Name = "textBoxSourceXML";
             this.textBoxSourceXML.Size = new System.Drawing.Size(280, 20);
             this.textBoxSourceXML.TabIndex = 4;
-            this.textBoxSourceXML.TextChanged += new System.EventHandler(this.textBoxSourceXML_TextChanged);
+            this.textBoxSourceXML.TextChanged += new System.EventHandler(this.TextBoxSourceXML_TextChanged);
             // 
             // btnChooseSourceXML
             // 
@@ -214,7 +223,7 @@
             this.textBoxDestTIF.Name = "textBoxDestTIF";
             this.textBoxDestTIF.Size = new System.Drawing.Size(280, 20);
             this.textBoxDestTIF.TabIndex = 4;
-            this.textBoxDestTIF.TextChanged += new System.EventHandler(this.textBoxDestTIF_TextChanged);
+            this.textBoxDestTIF.TextChanged += new System.EventHandler(this.TextBoxDestTIF_TextChanged);
             // 
             // textBoxDestXML
             // 
@@ -222,7 +231,7 @@
             this.textBoxDestXML.Name = "textBoxDestXML";
             this.textBoxDestXML.Size = new System.Drawing.Size(280, 20);
             this.textBoxDestXML.TabIndex = 4;
-            this.textBoxDestXML.TextChanged += new System.EventHandler(this.textBoxDestXML_TextChanged);
+            this.textBoxDestXML.TextChanged += new System.EventHandler(this.TextBoxDestXML_TextChanged);
             // 
             // btnChooseDestXML
             // 
@@ -254,7 +263,7 @@
             // 
             // btnMove
             // 
-            this.btnMove.Location = new System.Drawing.Point(8, 260);
+            this.btnMove.Location = new System.Drawing.Point(60, 278);
             this.btnMove.Name = "btnMove";
             this.btnMove.Size = new System.Drawing.Size(75, 23);
             this.btnMove.TabIndex = 7;
@@ -265,7 +274,7 @@
             // 
             // btnReset
             // 
-            this.btnReset.Location = new System.Drawing.Point(89, 260);
+            this.btnReset.Location = new System.Drawing.Point(141, 278);
             this.btnReset.Name = "btnReset";
             this.btnReset.Size = new System.Drawing.Size(75, 23);
             this.btnReset.TabIndex = 7;
@@ -317,14 +326,14 @@
             // 
             // btnCancel
             // 
-            this.btnCancel.Location = new System.Drawing.Point(251, 260);
+            this.btnCancel.Location = new System.Drawing.Point(303, 278);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(75, 23);
             this.btnCancel.TabIndex = 9;
             this.btnCancel.Text = "&Cancel";
             this.ToolTip.SetToolTip(this.btnCancel, "Cancel copying");
             this.btnCancel.UseVisualStyleBackColor = true;
-            this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
+            this.btnCancel.Click += new System.EventHandler(this.Cancel_Click);
             // 
             // panel1
             // 
@@ -347,13 +356,14 @@
             this.panel1.Controls.Add(this.btnChooseSourceXML);
             this.panel1.Controls.Add(this.textBoxDestTIF);
             this.panel1.Controls.Add(this.textBoxDestXML);
-            this.panel1.Location = new System.Drawing.Point(5, 66);
+            this.panel1.Location = new System.Drawing.Point(5, 50);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(445, 296);
+            this.panel1.Size = new System.Drawing.Size(445, 310);
             this.panel1.TabIndex = 10;
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.panel2);
             this.groupBox1.Controls.Add(this.comboFilesToMove);
             this.groupBox1.Controls.Add(this.label9);
             this.groupBox1.Controls.Add(this.cbCreateTIFLog);
@@ -361,10 +371,89 @@
             this.groupBox1.Controls.Add(this.label11);
             this.groupBox1.Location = new System.Drawing.Point(7, 182);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(432, 72);
+            this.groupBox1.Size = new System.Drawing.Size(432, 90);
             this.groupBox1.TabIndex = 20;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Options";
+            // 
+            // panel2
+            // 
+            this.panel2.Controls.Add(this.label12);
+            this.panel2.Controls.Add(this.label8);
+            this.panel2.Controls.Add(this.textBoxMoveCount);
+            this.panel2.Controls.Add(this.textBoxMovePercent);
+            this.panel2.Controls.Add(this.rbMoveCount);
+            this.panel2.Controls.Add(this.rbMovePercent);
+            this.panel2.Controls.Add(this.rbMoveAll);
+            this.panel2.Location = new System.Drawing.Point(287, 11);
+            this.panel2.Name = "panel2";
+            this.panel2.Size = new System.Drawing.Size(140, 73);
+            this.panel2.TabIndex = 21;
+            // 
+            // label12
+            // 
+            this.label12.AutoSize = true;
+            this.label12.Location = new System.Drawing.Point(110, 52);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(25, 13);
+            this.label12.TabIndex = 2;
+            this.label12.Text = "files";
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(110, 30);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(15, 13);
+            this.label8.TabIndex = 2;
+            this.label8.Text = "%";
+            // 
+            // textBoxMoveCount
+            // 
+            this.textBoxMoveCount.Location = new System.Drawing.Point(58, 49);
+            this.textBoxMoveCount.Name = "textBoxMoveCount";
+            this.textBoxMoveCount.Size = new System.Drawing.Size(46, 20);
+            this.textBoxMoveCount.TabIndex = 1;
+            // 
+            // textBoxMovePercent
+            // 
+            this.textBoxMovePercent.Location = new System.Drawing.Point(58, 26);
+            this.textBoxMovePercent.MaxLength = 3;
+            this.textBoxMovePercent.Name = "textBoxMovePercent";
+            this.textBoxMovePercent.Size = new System.Drawing.Size(46, 20);
+            this.textBoxMovePercent.TabIndex = 1;
+            // 
+            // rbMoveCount
+            // 
+            this.rbMoveCount.AutoSize = true;
+            this.rbMoveCount.Location = new System.Drawing.Point(6, 52);
+            this.rbMoveCount.Name = "rbMoveCount";
+            this.rbMoveCount.Size = new System.Drawing.Size(55, 17);
+            this.rbMoveCount.TabIndex = 0;
+            this.rbMoveCount.Text = "Move ";
+            this.rbMoveCount.UseVisualStyleBackColor = true;
+            // 
+            // rbMovePercent
+            // 
+            this.rbMovePercent.AutoSize = true;
+            this.rbMovePercent.Location = new System.Drawing.Point(6, 28);
+            this.rbMovePercent.Name = "rbMovePercent";
+            this.rbMovePercent.Size = new System.Drawing.Size(55, 17);
+            this.rbMovePercent.TabIndex = 0;
+            this.rbMovePercent.Text = "Move ";
+            this.rbMovePercent.UseVisualStyleBackColor = true;
+            // 
+            // rbMoveAll
+            // 
+            this.rbMoveAll.AutoSize = true;
+            this.rbMoveAll.Checked = true;
+            this.rbMoveAll.Location = new System.Drawing.Point(6, 4);
+            this.rbMoveAll.Name = "rbMoveAll";
+            this.rbMoveAll.Size = new System.Drawing.Size(90, 17);
+            this.rbMoveAll.TabIndex = 0;
+            this.rbMoveAll.TabStop = true;
+            this.rbMoveAll.Text = "Move All Files";
+            this.rbMoveAll.UseVisualStyleBackColor = true;
             // 
             // comboFilesToMove
             // 
@@ -373,16 +462,16 @@
             "Both XML and TIF",
             "XML only",
             "TIF only"});
-            this.comboFilesToMove.Location = new System.Drawing.Point(62, 42);
+            this.comboFilesToMove.Location = new System.Drawing.Point(62, 44);
             this.comboFilesToMove.Name = "comboFilesToMove";
             this.comboFilesToMove.Size = new System.Drawing.Size(138, 21);
             this.comboFilesToMove.TabIndex = 20;
-            this.comboFilesToMove.SelectedIndexChanged += new System.EventHandler(this.comboFilesToMove_SelectedIndexChanged);
+            this.comboFilesToMove.SelectedIndexChanged += new System.EventHandler(this.ComboFilesToMove_SelectedIndexChanged);
             // 
             // label9
             // 
             this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(6, 19);
+            this.label9.Location = new System.Drawing.Point(6, 21);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(79, 13);
             this.label9.TabIndex = 12;
@@ -391,29 +480,29 @@
             // cbCreateTIFLog
             // 
             this.cbCreateTIFLog.AutoSize = true;
-            this.cbCreateTIFLog.Location = new System.Drawing.Point(152, 19);
+            this.cbCreateTIFLog.Location = new System.Drawing.Point(152, 21);
             this.cbCreateTIFLog.Name = "cbCreateTIFLog";
             this.cbCreateTIFLog.Size = new System.Drawing.Size(66, 17);
             this.cbCreateTIFLog.TabIndex = 11;
             this.cbCreateTIFLog.Text = "TIF Files";
             this.cbCreateTIFLog.UseVisualStyleBackColor = true;
-            this.cbCreateTIFLog.CheckedChanged += new System.EventHandler(this.cbCreateTIFLog_CheckedChanged);
+            this.cbCreateTIFLog.CheckedChanged += new System.EventHandler(this.CreateTIFLog_CheckedChanged);
             // 
             // cbCreateXMLLog
             // 
             this.cbCreateXMLLog.AutoSize = true;
-            this.cbCreateXMLLog.Location = new System.Drawing.Point(85, 19);
+            this.cbCreateXMLLog.Location = new System.Drawing.Point(85, 21);
             this.cbCreateXMLLog.Name = "cbCreateXMLLog";
             this.cbCreateXMLLog.Size = new System.Drawing.Size(72, 17);
             this.cbCreateXMLLog.TabIndex = 11;
             this.cbCreateXMLLog.Text = "XML Files";
             this.cbCreateXMLLog.UseVisualStyleBackColor = true;
-            this.cbCreateXMLLog.CheckedChanged += new System.EventHandler(this.cbCreateXMLLog_CheckedChanged);
+            this.cbCreateXMLLog.CheckedChanged += new System.EventHandler(this.CreateXMLLog_CheckedChanged);
             // 
             // label11
             // 
             this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(6, 44);
+            this.label11.Location = new System.Drawing.Point(6, 46);
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(50, 13);
             this.label11.TabIndex = 19;
@@ -421,7 +510,7 @@
             // 
             // btnInvertPaths
             // 
-            this.btnInvertPaths.Location = new System.Drawing.Point(170, 260);
+            this.btnInvertPaths.Location = new System.Drawing.Point(222, 278);
             this.btnInvertPaths.Name = "btnInvertPaths";
             this.btnInvertPaths.Size = new System.Drawing.Size(75, 23);
             this.btnInvertPaths.TabIndex = 10;
@@ -435,27 +524,24 @@
             this.LabelXMLProgress.AutoSize = true;
             this.LabelXMLProgress.Location = new System.Drawing.Point(31, 27);
             this.LabelXMLProgress.Name = "LabelXMLProgress";
-            this.LabelXMLProgress.Size = new System.Drawing.Size(73, 13);
+            this.LabelXMLProgress.Size = new System.Drawing.Size(0, 13);
             this.LabelXMLProgress.TabIndex = 13;
-            this.LabelXMLProgress.Text = "XML Progress";
             // 
             // LabelTIFProgress
             // 
             this.LabelTIFProgress.AutoSize = true;
             this.LabelTIFProgress.Location = new System.Drawing.Point(31, 49);
             this.LabelTIFProgress.Name = "LabelTIFProgress";
-            this.LabelTIFProgress.Size = new System.Drawing.Size(67, 13);
+            this.LabelTIFProgress.Size = new System.Drawing.Size(0, 13);
             this.LabelTIFProgress.TabIndex = 13;
-            this.LabelTIFProgress.Text = "TIF Progress";
             // 
             // LabelMoveSize
             // 
             this.LabelMoveSize.AutoSize = true;
             this.LabelMoveSize.Location = new System.Drawing.Point(31, 71);
             this.LabelMoveSize.Name = "LabelMoveSize";
-            this.LabelMoveSize.Size = new System.Drawing.Size(40, 13);
+            this.LabelMoveSize.Size = new System.Drawing.Size(0, 13);
             this.LabelMoveSize.TabIndex = 14;
-            this.LabelMoveSize.Text = "Moved";
             // 
             // LabelHelp
             // 
@@ -485,9 +571,9 @@
             this.panelTitleBar.Name = "panelTitleBar";
             this.panelTitleBar.Size = new System.Drawing.Size(456, 24);
             this.panelTitleBar.TabIndex = 16;
-            this.panelTitleBar.MouseDown += new System.Windows.Forms.MouseEventHandler(this.panelTitleBar_MouseDown);
-            this.panelTitleBar.MouseMove += new System.Windows.Forms.MouseEventHandler(this.panelTitleBar_MouseMove);
-            this.panelTitleBar.MouseUp += new System.Windows.Forms.MouseEventHandler(this.panelTitleBar_MouseUp);
+            this.panelTitleBar.MouseDown += new System.Windows.Forms.MouseEventHandler(this.TitleBar_MouseDown);
+            this.panelTitleBar.MouseMove += new System.Windows.Forms.MouseEventHandler(this.TitleBar_MouseMove);
+            this.panelTitleBar.MouseUp += new System.Windows.Forms.MouseEventHandler(this.TitleBar_MouseUp);
             // 
             // LabelMinimize
             // 
@@ -506,7 +592,7 @@
             // label10
             // 
             this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(10, 36);
+            this.label10.Location = new System.Drawing.Point(10, 30);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(81, 13);
             this.label10.TabIndex = 17;
@@ -516,7 +602,7 @@
             // 
             this.rbVIL.AutoSize = true;
             this.rbVIL.Checked = true;
-            this.rbVIL.Location = new System.Drawing.Point(103, 35);
+            this.rbVIL.Location = new System.Drawing.Point(103, 29);
             this.rbVIL.Name = "rbVIL";
             this.rbVIL.Size = new System.Drawing.Size(41, 17);
             this.rbVIL.TabIndex = 18;
@@ -528,7 +614,7 @@
             // rbFCR
             // 
             this.rbFCR.AutoSize = true;
-            this.rbFCR.Location = new System.Drawing.Point(150, 35);
+            this.rbFCR.Location = new System.Drawing.Point(150, 29);
             this.rbFCR.Name = "rbFCR";
             this.rbFCR.Size = new System.Drawing.Size(46, 17);
             this.rbFCR.TabIndex = 18;
@@ -539,7 +625,7 @@
             // rbValidation
             // 
             this.rbValidation.AutoSize = true;
-            this.rbValidation.Location = new System.Drawing.Point(202, 35);
+            this.rbValidation.Location = new System.Drawing.Point(202, 29);
             this.rbValidation.Name = "rbValidation";
             this.rbValidation.Size = new System.Drawing.Size(71, 17);
             this.rbValidation.TabIndex = 18;
@@ -586,6 +672,8 @@
             this.panel1.PerformLayout();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
+            this.panel2.ResumeLayout(false);
+            this.panel2.PerformLayout();
             this.panelTitleBar.ResumeLayout(false);
             this.panelTitleBar.PerformLayout();
             this.groupBox2.ResumeLayout(false);
@@ -642,6 +730,14 @@
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.RadioButton rbValidation;
         private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.Panel panel2;
+        private System.Windows.Forms.Label label12;
+        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.TextBox textBoxMoveCount;
+        private System.Windows.Forms.TextBox textBoxMovePercent;
+        private System.Windows.Forms.RadioButton rbMoveCount;
+        private System.Windows.Forms.RadioButton rbMovePercent;
+        private System.Windows.Forms.RadioButton rbMoveAll;
     }
 }
 
