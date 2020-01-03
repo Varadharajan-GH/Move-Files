@@ -2,7 +2,6 @@
 using System.ComponentModel;
 using System.Drawing;
 using System.IO;
-//using System.Reflection;
 using System.Windows.Forms;
 
 namespace Move_Files
@@ -651,9 +650,9 @@ namespace Move_Files
                 ReadFolderSettings();
                 UpdateFolderBoxes();
             }
-            
 
-            
+
+
             //if (((RadioButton)sender).Checked)
             //{
             //    RadioButton rb = (RadioButton)sender;
