@@ -2,24 +2,19 @@
 using System.ComponentModel;
 using System.Drawing;
 using System.IO;
+//using System.Reflection;
 using System.Windows.Forms;
 
 namespace Move_Files
 {
     public partial class FormMain : Form
     {
-        private string SourceXMLFolder;
-        private string SourceTIFFolder;
+        private string SourceXMLFolder, SourceTIFFolder;
 
-        private string DestXMLFolder;
-        private string DestTIFFolder;
+        private string DestXMLFolder, DestTIFFolder;
 
-        private MySettings settings;
-
-        private string CopiedXMLLog;
-        private string CopiedTIFLog;
-        private string ErrorXMLLog;
-        private string ErrorTIFLog;
+        private string CopiedXMLLog, CopiedTIFLog;
+        private string ErrorXMLLog, ErrorTIFLog;
 
         private int copiedXMLFiles = 0, errorXMLFiles = 0;
         private int copiedTIFFiles = 0, errorTIFFiles = 0;
@@ -28,18 +23,18 @@ namespace Move_Files
         private long totalXMLSize = 0, totalTIFSize = 0;
         private long totalFileSize, totalCopiedSize = 0;
 
-        private string dateString;
-        private string LogPath;
+        private readonly string DateString, LogPath;
 
-        private System.Diagnostics.Stopwatch timer = new System.Diagnostics.Stopwatch();
+        private readonly System.Diagnostics.Stopwatch timer = new System.Diagnostics.Stopwatch();
+        private MySettings settings;
 
         private bool bEnableXMLLog, bEnableTIFLog;
         private bool bMoveXMLOnly, bMoveTIFOnly, bMoveBoth;
         private bool bWindowMoving;
 
-        //private bool bPrefetchFiles;
+        private string CurrentProcess;
 
-        int Sx, Sy, Ex, Ey;
+        private int Sx, Sy, Ex, Ey;
 
         public FormMain()
         {
@@ -47,7 +42,11 @@ namespace Move_Files
             LabelClose.BackColor = Color.Transparent;
             LabelClose.ForeColor = Color.Black;
 
+            rbVIL.Checked = true;
+            CurrentProcess = "VIL";
+
             ReadSettings();
+
             LabelXMLProgress.Text = string.Empty;
             LabelTIFProgress.Text = string.Empty;
             LabelMoveSize.Text = string.Empty;
@@ -57,7 +56,7 @@ namespace Move_Files
             bMoveTIFOnly = false;
             bMoveBoth = true;
 
-            dateString = DateTime.Now.ToString("yyMMdd");
+            DateString = DateTime.Now.ToString("yyMMdd");
             LogPath = Directory.CreateDirectory(Path.GetFullPath("./MoveFilesLogs/")).FullName;
 
         }
@@ -66,27 +65,8 @@ namespace Move_Files
         {
             settings = new MySettings(Path.GetFullPath("./MoveFilesSettings.XML"));
 
-            //if (settings.ReadSetting("prefetch") == "enable")
-            //{
-            //    bPrefetchFiles = true;
-
-            //}
-            //else
-            //{
-            //    bPrefetchFiles = false;
-            //}
-            //cbPrefetch.Checked = bPrefetchFiles;
-
-            SourceXMLFolder = settings.ReadSetting("sourcexmlpath");
-            SourceTIFFolder = settings.ReadSetting("sourcetifpath");
-
-            DestXMLFolder = settings.ReadSetting("destxmlpath");
-            DestTIFFolder = settings.ReadSetting("desttifpath");
-
-            textBoxSourceXML.Text = SourceXMLFolder;
-            textBoxSourceTIF.Text = SourceTIFFolder;
-            textBoxDestXML.Text = DestXMLFolder;
-            textBoxDestTIF.Text = DestTIFFolder;
+            ReadFolderSettings();
+            UpdateFolderBoxes();
 
             string tempset;
 
@@ -132,6 +112,38 @@ namespace Move_Files
                 cbCreateTIFLog.Checked = bEnableTIFLog;
             }
 
+        }
+
+        private void UpdateFolderBoxes()
+        {
+            textBoxSourceXML.Text = SourceXMLFolder;
+            textBoxSourceTIF.Text = SourceTIFFolder;
+            textBoxDestXML.Text = DestXMLFolder;
+            textBoxDestTIF.Text = DestTIFFolder;
+        }
+
+        private void ReadFolderSettings()
+        {
+            if (CurrentProcess == "VIL")
+            {
+                SourceXMLFolder = settings.ReadSetting("vilsourcexmlpath");
+                SourceTIFFolder = settings.ReadSetting("vilsourcetifpath");
+
+                DestXMLFolder = settings.ReadSetting("vildestxmlpath");
+                DestTIFFolder = settings.ReadSetting("vildesttifpath");
+            }
+            else if (CurrentProcess == "FCR")
+            {
+                SourceXMLFolder = settings.ReadSetting("fcrsourcexmlpath");
+                SourceTIFFolder = settings.ReadSetting("fcrsourcetifpath");
+
+                DestXMLFolder = settings.ReadSetting("fcrdestxmlpath");
+                DestTIFFolder = settings.ReadSetting("fcrdesttifpath");
+            }
+            else
+            {
+                MessageBox.Show("Select Process");
+            }
         }
 
         private void LabelClose_MouseClick(object sender, MouseEventArgs e)
@@ -209,19 +221,19 @@ namespace Move_Files
 
         private void btnMove_Click(object sender, EventArgs e)
         {
-            if (rbVIL.Checked)
+            if (CurrentProcess=="VIL")
             {
-                CopiedXMLLog = Path.Combine(LogPath, $"C_copiedxml_{dateString}.log");
-                CopiedTIFLog = Path.Combine(LogPath, $"C_copiedtif_{dateString}.log");
-                ErrorXMLLog = Path.Combine(LogPath, $"C_errorxml_{dateString}.log");
-                ErrorTIFLog = Path.Combine(LogPath, $"C_errortif_{dateString}.log");
+                CopiedXMLLog = Path.Combine(LogPath, $"C_copiedxml_{DateString}.log");
+                CopiedTIFLog = Path.Combine(LogPath, $"C_copiedtif_{DateString}.log");
+                ErrorXMLLog = Path.Combine(LogPath, $"C_errorxml_{DateString}.log");
+                ErrorTIFLog = Path.Combine(LogPath, $"C_errortif_{DateString}.log");
             }
-            else if (rbFCR.Checked)
+            else if (CurrentProcess == "FCR")
             {
-                CopiedXMLLog = Path.Combine(LogPath, $"F_copiedxml_{dateString}.log");
-                CopiedTIFLog = Path.Combine(LogPath, $"F_copiedtif_{dateString}.log");
-                ErrorXMLLog = Path.Combine(LogPath, $"F_errorxml_{dateString}.log");
-                ErrorTIFLog = Path.Combine(LogPath, $"F_errortif_{dateString}.log");
+                CopiedXMLLog = Path.Combine(LogPath, $"F_copiedxml_{DateString}.log");
+                CopiedTIFLog = Path.Combine(LogPath, $"F_copiedtif_{DateString}.log");
+                ErrorXMLLog = Path.Combine(LogPath, $"F_errorxml_{DateString}.log");
+                ErrorTIFLog = Path.Combine(LogPath, $"F_errortif_{DateString}.log");
             }
             else
             {
@@ -278,11 +290,20 @@ namespace Move_Files
                 return;
             }
 
-            settings.WriteSetting("sourcexmlpath", SourceXMLFolder);
-            settings.WriteSetting("sourcetifpath", SourceTIFFolder);
-            settings.WriteSetting("destxmlpath", DestXMLFolder);
-            settings.WriteSetting("desttifpath", DestTIFFolder);
-
+            if (CurrentProcess == "VIL")
+            {
+                settings.WriteSetting("vilsourcexmlpath", SourceXMLFolder);
+                settings.WriteSetting("vilsourcetifpath", SourceTIFFolder);
+                settings.WriteSetting("vildestxmlpath", DestXMLFolder);
+                settings.WriteSetting("vildesttifpath", DestTIFFolder);
+            }
+            else if (CurrentProcess == "FCR")
+            {
+                settings.WriteSetting("fcrsourcexmlpath", SourceXMLFolder);
+                settings.WriteSetting("fcrsourcetifpath", SourceTIFFolder);
+                settings.WriteSetting("fcrdestxmlpath", DestXMLFolder);
+                settings.WriteSetting("fcrdesttifpath", DestTIFFolder);
+            } 
 
             if (!BGWorker.IsBusy)
             {
@@ -305,8 +326,6 @@ namespace Move_Files
                 DirectoryInfo sourceXMLInfo = new DirectoryInfo(SourceXMLFolder);
                 DirectoryInfo sourceTIFInfo = new DirectoryInfo(SourceTIFFolder);
 
-                //if (!bPrefetchFiles)
-                //{  
                 foreach (FileInfo xmlfile in sourceXMLInfo.GetFiles("*.XML"))
                 {
                     totalXMLFiles++;
@@ -318,14 +337,20 @@ namespace Move_Files
                         totalTIFSize += tiffile.Length;
                     }
                 }
-                totalFileSize = totalXMLSize + totalTIFSize;
                 if (totalXMLFiles == 0)
                 {
                     MessageBox.Show("No XML files found.");
                     Status.Text = "No XML files found.";
                     return;
                 }
-
+                if (totalTIFFiles == 0)
+                {
+                    if (MessageBox.Show("No corresponding TIF files found. Move only XMLs?","Confirm Move!",MessageBoxButtons.OKCancel,MessageBoxIcon.Warning)==DialogResult.Cancel)
+                    {
+                        return;
+                    }
+                }
+                totalFileSize = totalXMLSize + totalTIFSize; 
                 foreach (FileInfo xmlfile in sourceXMLInfo.GetFiles("*.XML"))
                 {
                     if (BGWorker.CancellationPending)
@@ -385,86 +410,10 @@ namespace Move_Files
                             BGWorker.ReportProgress((int)(totalCopiedSize / (float)totalFileSize * 100));
                         }
                     }
-                }
-                //}
-                //else
-                //{
-                //    System.Collections.Generic.IEnumerable<FileInfo> xmlfiles = sourceXMLInfo.EnumerateFiles("*.XML", SearchOption.TopDirectoryOnly);
-                //    totalXMLFiles = xmlfiles.Count();
-                //    if (totalXMLFiles == 0)
-                //    {
-                //        MessageBox.Show("No XML files found.");
-                //        Status.Text = "No XML files found.";
-                //        return;
-                //    }
-                //    totalXMLSize = xmlfiles.Sum(f => f.Length);
-                //    totalTIFSize=sourceXMLInfo.EnumerateFiles("*.XML",SearchOption.TopDirectoryOnly) sourceTIFInfo.EnumerateFiles(Path.GetFileNameWithoutExtension(xmlfile.Name) + "*.TIF")
-                //    totalFileSize = totalXMLSize;
-                //    foreach (FileInfo xmlfile in xmlfiles)
-                //    {
-                //        if (BGWorker.CancellationPending)
-                //        {
-                //            e.Cancel = true;
-                //            BGWorker.ReportProgress(0);
-                //            return;
-                //        }
-                //        try
-                //        {
-                //            Status.Text = "Moving " + xmlfile.Name;
-                //            xmlfile.CopyTo(Path.Combine(DestXMLFolder, xmlfile.Name), true);
-                //            if (bEnableXMLLog)
-                //                File.AppendAllText(CopiedXMLLog, Environment.NewLine + Path.GetFileNameWithoutExtension(xmlfile.Name));
-                //            copiedXMLFiles++;
-                //            xmlfile.Delete();
-                //        }
-                //        catch
-                //        {
-                //            Status.Text = "Error Moving " + xmlfile.Name;
-                //            errorXMLFiles++;
-                //            if (bEnableXMLLog)
-                //                File.AppendAllText(ErrorXMLLog, Environment.NewLine + Path.GetFileNameWithoutExtension(xmlfile.Name));
-                //        }
-                //        finally
-                //        {
-                //            totalCopiedSize += xmlfile.Length;
-                //            BGWorker.ReportProgress((int)(totalCopiedSize / (float)totalFileSize * 100));
-                //        }
-                //        foreach (FileInfo tiffile in sourceTIFInfo.GetFiles(Path.GetFileNameWithoutExtension(xmlfile.Name) + "*.TIF"))
-                //        {
-                //            if (BGWorker.CancellationPending)
-                //            {
-                //                e.Cancel = true;
-                //                BGWorker.ReportProgress(0);
-                //            }
-                //            try
-                //            {
-                //                Status.Text = "Moving " + tiffile.Name;
-                //                File.Copy(tiffile.FullName, Path.Combine(DestTIFFolder, tiffile.Name), true);
-                //                if (bEnableTIFLog)
-                //                    File.AppendAllText(CopiedTIFLog, Environment.NewLine + Path.GetFileNameWithoutExtension(tiffile.Name));
-                //                copiedTIFFiles++;
-                //                tiffile.Delete();
-                //            }
-                //            catch
-                //            {
-                //                Status.Text = "Moving " + tiffile.Name;
-                //                if (bEnableTIFLog)
-                //                    File.AppendAllText(ErrorTIFLog, Environment.NewLine + Path.GetFileNameWithoutExtension(tiffile.Name));
-                //                errorTIFFiles++;
-                //            }
-                //            finally
-                //            {
-                //                totalCopiedSize += tiffile.Length;
-                //                BGWorker.ReportProgress((int)(totalCopiedSize / (float)totalFileSize * 100));
-                //            }
-                //        }
-                //    }
-                //}
+                }                
             }
             else if (bMoveXMLOnly)
             {
-                //if (!bPrefetchFiles)
-                //{
                 DirectoryInfo sourceXMLInfo = new DirectoryInfo(SourceXMLFolder);
 
                 foreach (FileInfo xmlfile in sourceXMLInfo.GetFiles("*.XML"))
@@ -509,55 +458,9 @@ namespace Move_Files
                         BGWorker.ReportProgress((int)(totalCopiedSize / (float)totalFileSize * 100));
                     }
                 }
-                //}
-                //else
-                //{                    
-                //    System.Collections.Generic.IEnumerable<FileInfo> xmlfiles = new DirectoryInfo(SourceXMLFolder).EnumerateFiles("*.XML", SearchOption.TopDirectoryOnly);
-                //    totalXMLFiles = xmlfiles.Count();
-                //    if (totalXMLFiles == 0)
-                //    {
-                //        MessageBox.Show("No XML files found.");
-                //        Status.Text = "No XML files found.";
-                //        return;
-                //    }
-                //    totalXMLSize = xmlfiles.Sum(f => f.Length);
-                //    totalFileSize = totalXMLSize;
-                //    foreach (FileInfo xmlfile in xmlfiles)
-                //    {
-                //        if (BGWorker.CancellationPending)
-                //        {
-                //            e.Cancel = true;
-                //            BGWorker.ReportProgress(0);
-                //            return;
-                //        }
-                //        try
-                //        {
-                //            Status.Text = "Moving " + xmlfile.Name;
-                //            xmlfile.CopyTo(Path.Combine(DestXMLFolder, xmlfile.Name), true);
-                //            if (bEnableXMLLog)
-                //                File.AppendAllText(CopiedXMLLog, Environment.NewLine + Path.GetFileNameWithoutExtension(xmlfile.Name));
-                //            copiedXMLFiles++;
-                //            xmlfile.Delete();
-                //        }
-                //        catch
-                //        {
-                //            Status.Text = "Error Moving " + xmlfile.Name;
-                //            errorXMLFiles++;
-                //            if (bEnableXMLLog)
-                //                File.AppendAllText(ErrorXMLLog, Environment.NewLine + Path.GetFileNameWithoutExtension(xmlfile.Name));
-                //        }
-                //        finally
-                //        {
-                //            totalCopiedSize += xmlfile.Length;
-                //            BGWorker.ReportProgress((int)(totalCopiedSize / (float)totalFileSize * 100));
-                //        }
-                //    }
-                //}
             }
             else if (bMoveTIFOnly)
             {
-                //if (!bPrefetchFiles)
-                //{
                 DirectoryInfo sourceTIFInfo = new DirectoryInfo(SourceTIFFolder);
 
                 foreach (FileInfo TIFfile in sourceTIFInfo.GetFiles("*.TIF"))
@@ -602,50 +505,6 @@ namespace Move_Files
                         BGWorker.ReportProgress((int)(totalCopiedSize / (float)totalFileSize * 100));
                     }
                 }
-                //}
-                //else
-                //{
-                //    System.Collections.Generic.IEnumerable<FileInfo> tiffiles = new DirectoryInfo(SourceTIFFolder).EnumerateFiles("*.TIF", SearchOption.TopDirectoryOnly);
-                //    totalTIFFiles = tiffiles.Count();
-                //    if (totalTIFFiles == 0)
-                //    {
-                //        MessageBox.Show("No TIF files found.");
-                //        Status.Text = "No TIF files found.";
-                //        return;
-                //    }
-                //    totalTIFSize = tiffiles.Sum(f => f.Length);
-                //    totalFileSize = totalTIFSize;
-                //    foreach (FileInfo tiffile in tiffiles)
-                //    {
-                //        if (BGWorker.CancellationPending)
-                //        {
-                //            e.Cancel = true;
-                //            BGWorker.ReportProgress(0);
-                //            return;
-                //        }
-                //        try
-                //        {
-                //            Status.Text = "Moving " + tiffile.Name;
-                //            tiffile.CopyTo(Path.Combine(DestTIFFolder, tiffile.Name), true);
-                //            if (bEnableTIFLog)
-                //                File.AppendAllText(CopiedTIFLog, Environment.NewLine + Path.GetFileNameWithoutExtension(tiffile.Name));
-                //            copiedTIFFiles++;
-                //            tiffile.Delete();
-                //        }
-                //        catch
-                //        {
-                //            Status.Text = "Error Moving " + tiffile.Name;
-                //            errorTIFFiles++;
-                //            if (bEnableTIFLog)
-                //                File.AppendAllText(ErrorTIFLog, Environment.NewLine + Path.GetFileNameWithoutExtension(tiffile.Name));
-                //        }
-                //        finally
-                //        {
-                //            totalCopiedSize += tiffile.Length;
-                //            BGWorker.ReportProgress((int)(totalCopiedSize / (float)totalFileSize * 100));
-                //        }
-                //    }
-                //}
             }
             else
             {
@@ -677,11 +536,21 @@ namespace Move_Files
 
         private void LabelHelp_Click(object sender, EventArgs e)
         {
+            Version version = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
+            DateTime buildDate = new DateTime(2000, 1, 1)
+                                    .AddDays(version.Build)
+                                    .AddSeconds(version.Revision * 2);
+
             System.Text.StringBuilder HelpText = new System.Text.StringBuilder();
-            HelpText.AppendLine("This program will move all XML files from source XML folder");
+            HelpText.AppendLine("   Move Files");
+            HelpText.AppendLine($"   Version : {version}");
+            HelpText.AppendLine($"   Build Date : {buildDate}");
+            HelpText.AppendLine();
+            HelpText.AppendLine("   This program will move all XML files from source XML folder");
             HelpText.AppendLine("to target XML folder and their corresponding TIF files from");
             HelpText.AppendLine("source TIF folder to target TIF folder.");
-            HelpText.AppendLine("Tool will also create logs for Moved files in Log folder");
+            HelpText.AppendLine();
+            HelpText.AppendLine("   Tool will also create logs for Moved files in Log folder");
             MessageBox.Show(HelpText.ToString(), "Move Files", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
@@ -717,6 +586,17 @@ namespace Move_Files
                 Left += Ex - Sx;
                 Top += Ey - Sy;
                 bWindowMoving = false;
+            }
+        }
+
+        private void ProcessChanged(object sender, EventArgs e)
+        {
+            if (((RadioButton)sender).Checked)
+            {
+                RadioButton rb = (RadioButton)sender;
+                CurrentProcess = rb.Text;
+                ReadFolderSettings();
+                UpdateFolderBoxes();
             }
         }
 
@@ -848,21 +728,7 @@ namespace Move_Files
         {
             LabelMinimize.BackColor = Color.Transparent;
             LabelMinimize.ForeColor = Color.Black;
-        }
-
-        //private void cbPrefetch_CheckedChanged(object sender, EventArgs e)
-        //{
-        //    if (((CheckBox)sender).Checked)
-        //    {
-        //        settings.WriteSetting("prefetch", "enable");
-        //        bPrefetchFiles = true;
-        //    }
-        //    else
-        //    {
-        //        settings.WriteSetting("prefetch", "disable");
-        //        bPrefetchFiles = false;
-        //    }
-        //}
+        }        
 
         private void btnInvertPaths_Click(object sender, EventArgs e)
         {

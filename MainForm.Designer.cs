@@ -486,6 +486,7 @@
             // rbVIL
             // 
             this.rbVIL.AutoSize = true;
+            this.rbVIL.Checked = true;
             this.rbVIL.Location = new System.Drawing.Point(103, 35);
             this.rbVIL.Name = "rbVIL";
             this.rbVIL.Size = new System.Drawing.Size(41, 17);
@@ -493,6 +494,7 @@
             this.rbVIL.TabStop = true;
             this.rbVIL.Text = "VIL";
             this.rbVIL.UseVisualStyleBackColor = true;
+            this.rbVIL.CheckedChanged += new System.EventHandler(this.ProcessChanged);
             // 
             // rbFCR
             // 
@@ -501,9 +503,9 @@
             this.rbFCR.Name = "rbFCR";
             this.rbFCR.Size = new System.Drawing.Size(46, 17);
             this.rbFCR.TabIndex = 18;
-            this.rbFCR.TabStop = true;
             this.rbFCR.Text = "FCR";
             this.rbFCR.UseVisualStyleBackColor = true;
+            this.rbFCR.CheckedChanged += new System.EventHandler(this.ProcessChanged);
             // 
             // label11
             // 
