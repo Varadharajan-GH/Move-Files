@@ -1,10 +1,12 @@
-﻿namespace Move_Files
+﻿
+namespace Move_Files
 {
-    class VILModel : IProcessModel
+    public class VILModel : IProcessModel
     {
-        private ProcessSettingKeys settingKeys;
+        private readonly ProcessSettingKeys settingKeys;
+        public System.Windows.Forms.RadioButton processRadio;
 
-        public VILModel()
+        public VILModel(System.Windows.Forms.RadioButton rb)
         {
             settingKeys = new ProcessSettingKeys
             {
@@ -13,6 +15,27 @@
                 DestXMLPath = "vildestxmlpath",
                 DestTIFPath = "vildesttifpath"
             };
+            processRadio = rb;
+        }
+
+        public string GetCopiedTIFLogPrefix()
+        {
+            return "vilcopiedtif";
+        }
+
+        public string GetCopiedXMLLogPrefix()
+        {
+            return "vilcopiedxml";
+        }
+
+        public string GetErrorTIFLogPrefix()
+        {
+            return "vilerrortif";
+        }
+
+        public string GetErrorXMLLogPrefix()
+        {
+            return "vilerrorxml";
         }
 
         public string GetDestTIFPathKey()
@@ -25,6 +48,16 @@
             return settingKeys.DestXMLPath;
         }
 
+        public string GetProcessName()
+        {
+            return "VIL";
+        }
+
+        public System.Windows.Forms.RadioButton GetRadioButton()
+        {
+            return processRadio;
+        }
+
         public string GetSourceTIFPathKey()
         {
             return settingKeys.SourceTIFPath;
@@ -34,5 +67,6 @@
         {
             return settingKeys.SourceXMLPath;
         }
+
     }
 }

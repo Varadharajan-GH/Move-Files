@@ -36,14 +36,24 @@ namespace Move_Files
 
         private int Sx, Sy, Ex, Ey;
 
+        private IProcessModel processModel;
+        private VILModel vilModel;
+        private FCRModel fcrModel;
+        private ValidationModel validationModel;
+
         public FormMain()
         {
             InitializeComponent();
             LabelClose.BackColor = Color.Transparent;
             LabelClose.ForeColor = Color.Black;
 
-            rbVIL.Checked = true;
-            CurrentProcess = "VIL";
+            vilModel = new VILModel(rbVIL);
+            fcrModel = new FCRModel(rbFCR);
+            validationModel = new ValidationModel(rbValidation);
+
+            processModel = vilModel;
+            processModel.GetRadioButton().Checked = true;
+            CurrentProcess = processModel.GetProcessName();
 
             ReadSettings();
 
@@ -68,9 +78,7 @@ namespace Move_Files
             ReadFolderSettings();
             UpdateFolderBoxes();
 
-            string tempset;
-
-            tempset = settings.ReadSetting("xmllog");
+            string tempset = settings.ReadSetting("xmllog");
             if (!string.IsNullOrWhiteSpace(tempset))
             {
                 if (tempset == "enable")
@@ -83,7 +91,6 @@ namespace Move_Files
                     bEnableXMLLog = false;
                     cbCreateXMLLog.Checked = bEnableXMLLog;
                 }
-
             }
             else
             {
@@ -104,46 +111,57 @@ namespace Move_Files
                     bEnableTIFLog = false;
                     cbCreateTIFLog.Checked = bEnableTIFLog;
                 }
-
             }
             else
             {
                 bEnableTIFLog = false;
                 cbCreateTIFLog.Checked = bEnableTIFLog;
             }
-
         }
+        private void ReadFolderSettings()
+        {
+            if (processModel == null)
+            {
+                MessageBox.Show("Select Process");
+                return;
+            }
+            else
+            {
+                SourceXMLFolder = settings.ReadSetting(processModel.GetSourceXMLPathKey());
+                SourceTIFFolder = settings.ReadSetting(processModel.GetSourceTIFPathKey());
 
+                DestXMLFolder = settings.ReadSetting(processModel.GetDestXMLPathKey());
+                DestTIFFolder = settings.ReadSetting(processModel.GetDestTIFPathKey());
+            }
+
+
+            //if (CurrentProcess == "VIL")
+            //{
+            //    SourceXMLFolder = settings.ReadSetting("vilsourcexmlpath");
+            //    SourceTIFFolder = settings.ReadSetting("vilsourcetifpath");
+
+            //    DestXMLFolder = settings.ReadSetting("vildestxmlpath");
+            //    DestTIFFolder = settings.ReadSetting("vildesttifpath");
+            //}
+            //else if (CurrentProcess == "FCR")
+            //{
+            //    SourceXMLFolder = settings.ReadSetting("fcrsourcexmlpath");
+            //    SourceTIFFolder = settings.ReadSetting("fcrsourcetifpath");
+
+            //    DestXMLFolder = settings.ReadSetting("fcrdestxmlpath");
+            //    DestTIFFolder = settings.ReadSetting("fcrdesttifpath");
+            //}
+            //else
+            //{
+            //    MessageBox.Show("Select Process");
+            //}
+        }
         private void UpdateFolderBoxes()
         {
             textBoxSourceXML.Text = SourceXMLFolder;
             textBoxSourceTIF.Text = SourceTIFFolder;
             textBoxDestXML.Text = DestXMLFolder;
             textBoxDestTIF.Text = DestTIFFolder;
-        }
-
-        private void ReadFolderSettings()
-        {
-            if (CurrentProcess == "VIL")
-            {
-                SourceXMLFolder = settings.ReadSetting("vilsourcexmlpath");
-                SourceTIFFolder = settings.ReadSetting("vilsourcetifpath");
-
-                DestXMLFolder = settings.ReadSetting("vildestxmlpath");
-                DestTIFFolder = settings.ReadSetting("vildesttifpath");
-            }
-            else if (CurrentProcess == "FCR")
-            {
-                SourceXMLFolder = settings.ReadSetting("fcrsourcexmlpath");
-                SourceTIFFolder = settings.ReadSetting("fcrsourcetifpath");
-
-                DestXMLFolder = settings.ReadSetting("fcrdestxmlpath");
-                DestTIFFolder = settings.ReadSetting("fcrdesttifpath");
-            }
-            else
-            {
-                MessageBox.Show("Select Process");
-            }
         }
 
         private void LabelClose_MouseClick(object sender, MouseEventArgs e)
@@ -163,7 +181,7 @@ namespace Move_Files
             LabelClose.ForeColor = Color.Black;
         }
 
-        private void btnChooseSourceXML_Click(object sender, EventArgs e)
+        private void ChooseSourceXML_Click(object sender, EventArgs e)
         {
             FolderDialog.Description = "Select Source XML Folder";
 
@@ -175,7 +193,7 @@ namespace Move_Files
             }
         }
 
-        private void btnChooseSourceTIF_Click(object sender, EventArgs e)
+        private void ChooseSourceTIF_Click(object sender, EventArgs e)
         {
             FolderDialog.Description = "Select Source TIF Folder";
 
@@ -187,7 +205,7 @@ namespace Move_Files
             }
         }
 
-        private void btnChooseDestXML_Click(object sender, EventArgs e)
+        private void ChooseDestXML_Click(object sender, EventArgs e)
         {
             FolderDialog.Description = "Select Dest XML Folder";
 
@@ -199,7 +217,7 @@ namespace Move_Files
             }
         }
 
-        private void btnChooseDestTIF_Click(object sender, EventArgs e)
+        private void ChooseDestTIF_Click(object sender, EventArgs e)
         {
             FolderDialog.Description = "Select Dest TIF Folder";
 
@@ -211,7 +229,7 @@ namespace Move_Files
             }
         }
 
-        private void btnReset_Click(object sender, EventArgs e)
+        private void Reset_Click(object sender, EventArgs e)
         {
             textBoxSourceXML.Clear();
             textBoxSourceTIF.Clear();
@@ -219,27 +237,39 @@ namespace Move_Files
             textBoxDestTIF.Clear();
         }
 
-        private void btnMove_Click(object sender, EventArgs e)
+        private void Move_Click(object sender, EventArgs e)
         {
-            if (CurrentProcess=="VIL")
-            {
-                CopiedXMLLog = Path.Combine(LogPath, $"C_copiedxml_{DateString}.log");
-                CopiedTIFLog = Path.Combine(LogPath, $"C_copiedtif_{DateString}.log");
-                ErrorXMLLog = Path.Combine(LogPath, $"C_errorxml_{DateString}.log");
-                ErrorTIFLog = Path.Combine(LogPath, $"C_errortif_{DateString}.log");
-            }
-            else if (CurrentProcess == "FCR")
-            {
-                CopiedXMLLog = Path.Combine(LogPath, $"F_copiedxml_{DateString}.log");
-                CopiedTIFLog = Path.Combine(LogPath, $"F_copiedtif_{DateString}.log");
-                ErrorXMLLog = Path.Combine(LogPath, $"F_errorxml_{DateString}.log");
-                ErrorTIFLog = Path.Combine(LogPath, $"F_errortif_{DateString}.log");
-            }
-            else
+            if (processModel == null)
             {
                 MessageBox.Show("You must select either VIL or FCR", "Select Process", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
+            else
+            {
+                CopiedXMLLog = Path.Combine(LogPath, $"{processModel.GetCopiedXMLLogPrefix()}_{DateString}.log");
+                CopiedTIFLog = Path.Combine(LogPath, $"{processModel.GetCopiedTIFLogPrefix()}_{DateString}.log");
+                ErrorXMLLog = Path.Combine(LogPath, $"{processModel.GetErrorXMLLogPrefix()}_{DateString}.log");
+                ErrorTIFLog = Path.Combine(LogPath, $"{processModel.GetErrorTIFLogPrefix()}_{DateString}.log");
+            }
+            //if (CurrentProcess=="VIL")
+            //{
+            //    CopiedXMLLog = Path.Combine(LogPath, $"C_copiedxml_{DateString}.log");
+            //    CopiedTIFLog = Path.Combine(LogPath, $"C_copiedtif_{DateString}.log");
+            //    ErrorXMLLog = Path.Combine(LogPath, $"C_errorxml_{DateString}.log");
+            //    ErrorTIFLog = Path.Combine(LogPath, $"C_errortif_{DateString}.log");
+            //}
+            //else if (CurrentProcess == "FCR")
+            //{
+            //    CopiedXMLLog = Path.Combine(LogPath, $"F_copiedxml_{DateString}.log");
+            //    CopiedTIFLog = Path.Combine(LogPath, $"F_copiedtif_{DateString}.log");
+            //    ErrorXMLLog = Path.Combine(LogPath, $"F_errorxml_{DateString}.log");
+            //    ErrorTIFLog = Path.Combine(LogPath, $"F_errortif_{DateString}.log");
+            //}
+            //else
+            //{
+            //    MessageBox.Show("You must select either VIL or FCR", "Select Process", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            //    return;
+            //}
 
             if (!Directory.Exists(textBoxSourceXML.Text))
             {
@@ -290,20 +320,32 @@ namespace Move_Files
                 return;
             }
 
-            if (CurrentProcess == "VIL")
+            if (processModel == null)
             {
-                settings.WriteSetting("vilsourcexmlpath", SourceXMLFolder);
-                settings.WriteSetting("vilsourcetifpath", SourceTIFFolder);
-                settings.WriteSetting("vildestxmlpath", DestXMLFolder);
-                settings.WriteSetting("vildesttifpath", DestTIFFolder);
+                MessageBox.Show("Unable to write settings. No process selected.");
             }
-            else if (CurrentProcess == "FCR")
+            else
             {
-                settings.WriteSetting("fcrsourcexmlpath", SourceXMLFolder);
-                settings.WriteSetting("fcrsourcetifpath", SourceTIFFolder);
-                settings.WriteSetting("fcrdestxmlpath", DestXMLFolder);
-                settings.WriteSetting("fcrdesttifpath", DestTIFFolder);
-            } 
+                settings.WriteSetting(processModel.GetSourceXMLPathKey(), SourceXMLFolder);
+                settings.WriteSetting(processModel.GetSourceTIFPathKey(), SourceTIFFolder);
+                settings.WriteSetting(processModel.GetDestXMLPathKey(), DestXMLFolder);
+                settings.WriteSetting(processModel.GetDestTIFPathKey(), DestTIFFolder);
+            }
+
+            //if (CurrentProcess == "VIL")
+            //{
+            //    settings.WriteSetting("vilsourcexmlpath", SourceXMLFolder);
+            //    settings.WriteSetting("vilsourcetifpath", SourceTIFFolder);
+            //    settings.WriteSetting("vildestxmlpath", DestXMLFolder);
+            //    settings.WriteSetting("vildesttifpath", DestTIFFolder);
+            //}
+            //else if (CurrentProcess == "FCR")
+            //{
+            //    settings.WriteSetting("fcrsourcexmlpath", SourceXMLFolder);
+            //    settings.WriteSetting("fcrsourcetifpath", SourceTIFFolder);
+            //    settings.WriteSetting("fcrdestxmlpath", DestXMLFolder);
+            //    settings.WriteSetting("fcrdesttifpath", DestTIFFolder);
+            //} 
 
             if (!BGWorker.IsBusy)
             {
@@ -345,12 +387,12 @@ namespace Move_Files
                 }
                 if (totalTIFFiles == 0)
                 {
-                    if (MessageBox.Show("No corresponding TIF files found. Move only XMLs?","Confirm Move!",MessageBoxButtons.OKCancel,MessageBoxIcon.Warning)==DialogResult.Cancel)
+                    if (MessageBox.Show("No corresponding TIF files found. Move only XMLs?", "Confirm Move!", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning) == DialogResult.Cancel)
                     {
                         return;
                     }
                 }
-                totalFileSize = totalXMLSize + totalTIFSize; 
+                totalFileSize = totalXMLSize + totalTIFSize;
                 foreach (FileInfo xmlfile in sourceXMLInfo.GetFiles("*.XML"))
                 {
                     if (BGWorker.CancellationPending)
@@ -410,7 +452,7 @@ namespace Move_Files
                             BGWorker.ReportProgress((int)(totalCopiedSize / (float)totalFileSize * 100));
                         }
                     }
-                }                
+                }
             }
             else if (bMoveXMLOnly)
             {
@@ -593,11 +635,32 @@ namespace Move_Files
         {
             if (((RadioButton)sender).Checked)
             {
-                RadioButton rb = (RadioButton)sender;
-                CurrentProcess = rb.Text;
+                if (((RadioButton)sender) == vilModel.processRadio)
+                {
+                    processModel = vilModel;
+                }
+                else if (((RadioButton)sender) == fcrModel.processRadio)
+                {
+                    processModel = fcrModel;
+                }
+                else if (((RadioButton)sender) == validationModel.processRadio)
+                {
+                    processModel = validationModel;
+                }
+                CurrentProcess = processModel.GetProcessName();
                 ReadFolderSettings();
                 UpdateFolderBoxes();
             }
+            
+
+            
+            //if (((RadioButton)sender).Checked)
+            //{
+            //    RadioButton rb = (RadioButton)sender;
+            //    CurrentProcess = rb.Text;
+            //    ReadFolderSettings();
+            //    UpdateFolderBoxes();
+            //}
         }
 
         private void cbCreateXMLLog_CheckedChanged(object sender, EventArgs e)
@@ -645,31 +708,16 @@ namespace Move_Files
             switch (comboFilesToMove.SelectedItem)
             {
                 case "Both XML and TIF":
-                    textBoxSourceXML.Enabled = true;
-                    textBoxDestXML.Enabled = true;
-                    btnChooseSourceXML.Enabled = true;
-                    btnChooseDestXML.Enabled = true;
-
-                    textBoxSourceTIF.Enabled = true;
-                    textBoxDestTIF.Enabled = true;
-                    btnChooseSourceTIF.Enabled = true;
-                    btnChooseDestTIF.Enabled = true;
+                    EnableXMLControls();
+                    EnableTIFControls();
 
                     bMoveXMLOnly = false;
                     bMoveTIFOnly = false;
                     bMoveBoth = true;
-
                     break;
                 case "XML only":
-                    textBoxSourceXML.Enabled = true;
-                    textBoxDestXML.Enabled = true;
-                    btnChooseSourceXML.Enabled = true;
-                    btnChooseDestXML.Enabled = true;
-
-                    textBoxSourceTIF.Enabled = false;
-                    textBoxDestTIF.Enabled = false;
-                    btnChooseSourceTIF.Enabled = false;
-                    btnChooseDestTIF.Enabled = false;
+                    EnableXMLControls();
+                    DisableTIFControls();
 
                     bMoveXMLOnly = true;
                     bMoveTIFOnly = false;
@@ -678,15 +726,8 @@ namespace Move_Files
                     MessageBox.Show("Only XML files will be moved.\nTIFs wont move.");
                     break;
                 case "TIF only":
-                    textBoxSourceXML.Enabled = false;
-                    textBoxDestXML.Enabled = false;
-                    btnChooseSourceXML.Enabled = false;
-                    btnChooseDestXML.Enabled = false;
-
-                    textBoxSourceTIF.Enabled = true;
-                    textBoxDestTIF.Enabled = true;
-                    btnChooseSourceTIF.Enabled = true;
-                    btnChooseDestTIF.Enabled = true;
+                    DisableXMLControls();
+                    EnableTIFControls();
 
                     bMoveXMLOnly = false;
                     bMoveTIFOnly = true;
@@ -695,15 +736,8 @@ namespace Move_Files
                     MessageBox.Show("All TIF files will be moved.\nXMLs wont move.", "Confirm?", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     break;
                 default:
-                    textBoxSourceXML.Enabled = true;
-                    textBoxDestXML.Enabled = true;
-                    btnChooseSourceXML.Enabled = true;
-                    btnChooseDestXML.Enabled = true;
-
-                    textBoxSourceTIF.Enabled = true;
-                    textBoxDestTIF.Enabled = true;
-                    btnChooseSourceTIF.Enabled = true;
-                    btnChooseDestTIF.Enabled = true;
+                    EnableXMLControls();
+                    EnableTIFControls();
 
                     bMoveXMLOnly = false;
                     bMoveTIFOnly = false;
@@ -713,6 +747,34 @@ namespace Move_Files
             }
         }
 
+        private void DisableXMLControls()
+        {
+            textBoxSourceXML.Enabled = false;
+            textBoxDestXML.Enabled = false;
+            btnChooseSourceXML.Enabled = false;
+            btnChooseDestXML.Enabled = false;
+        }
+        private void DisableTIFControls()
+        {
+            textBoxSourceTIF.Enabled = false;
+            textBoxDestTIF.Enabled = false;
+            btnChooseSourceTIF.Enabled = false;
+            btnChooseDestTIF.Enabled = false;
+        }
+        private void EnableTIFControls()
+        {
+            textBoxSourceTIF.Enabled = true;
+            textBoxDestTIF.Enabled = true;
+            btnChooseSourceTIF.Enabled = true;
+            btnChooseDestTIF.Enabled = true;
+        }
+        private void EnableXMLControls()
+        {
+            textBoxSourceXML.Enabled = true;
+            textBoxDestXML.Enabled = true;
+            btnChooseSourceXML.Enabled = true;
+            btnChooseDestXML.Enabled = true;
+        }
         private void LabelMinimize_Click(object sender, EventArgs e)
         {
             WindowState = FormWindowState.Minimized;
@@ -728,9 +790,9 @@ namespace Move_Files
         {
             LabelMinimize.BackColor = Color.Transparent;
             LabelMinimize.ForeColor = Color.Black;
-        }        
+        }
 
-        private void btnInvertPaths_Click(object sender, EventArgs e)
+        private void InvertPaths_Click(object sender, EventArgs e)
         {
             string temp;
             temp = SourceXMLFolder;
@@ -773,6 +835,7 @@ namespace Move_Files
                 else
                 {
                     LabelMoveSize.Text = $"{(float)totalCopiedSize / (1024 * 1024)} MB moved in {timer.Elapsed.TotalSeconds} seconds at {((float)totalCopiedSize / (1024 * 1024 * timer.Elapsed.TotalSeconds)).ToString("00.00")} MBps";
+                    MessageBox.Show($"Task complete for {processModel.GetProcessName()} process.");
                 }
             }
         }

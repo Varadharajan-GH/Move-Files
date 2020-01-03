@@ -55,11 +55,13 @@
             this.BGWorker = new System.ComponentModel.BackgroundWorker();
             this.btnCancel = new System.Windows.Forms.Button();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.comboFilesToMove = new System.Windows.Forms.ComboBox();
+            this.label9 = new System.Windows.Forms.Label();
             this.cbCreateTIFLog = new System.Windows.Forms.CheckBox();
             this.cbCreateXMLLog = new System.Windows.Forms.CheckBox();
+            this.label11 = new System.Windows.Forms.Label();
             this.btnInvertPaths = new System.Windows.Forms.Button();
-            this.label9 = new System.Windows.Forms.Label();
-            this.label8 = new System.Windows.Forms.Label();
             this.LabelXMLProgress = new System.Windows.Forms.Label();
             this.LabelTIFProgress = new System.Windows.Forms.Label();
             this.LabelMoveSize = new System.Windows.Forms.Label();
@@ -70,12 +72,14 @@
             this.label10 = new System.Windows.Forms.Label();
             this.rbVIL = new System.Windows.Forms.RadioButton();
             this.rbFCR = new System.Windows.Forms.RadioButton();
-            this.label11 = new System.Windows.Forms.Label();
-            this.comboFilesToMove = new System.Windows.Forms.ComboBox();
+            this.rbValidation = new System.Windows.Forms.RadioButton();
+            this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.ToolStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.ErrorProvider)).BeginInit();
             this.panel1.SuspendLayout();
+            this.groupBox1.SuspendLayout();
             this.panelTitleBar.SuspendLayout();
+            this.groupBox2.SuspendLayout();
             this.SuspendLayout();
             // 
             // LabelClose
@@ -161,7 +165,7 @@
             this.btnChooseSourceXML.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             this.ToolTip.SetToolTip(this.btnChooseSourceXML, "Select source XML folder");
             this.btnChooseSourceXML.UseVisualStyleBackColor = true;
-            this.btnChooseSourceXML.Click += new System.EventHandler(this.btnChooseSourceXML_Click);
+            this.btnChooseSourceXML.Click += new System.EventHandler(this.ChooseSourceXML_Click);
             // 
             // btnChooseSourceTIF
             // 
@@ -175,7 +179,7 @@
             this.btnChooseSourceTIF.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             this.ToolTip.SetToolTip(this.btnChooseSourceTIF, "Select source TIF folder");
             this.btnChooseSourceTIF.UseVisualStyleBackColor = true;
-            this.btnChooseSourceTIF.Click += new System.EventHandler(this.btnChooseSourceTIF_Click);
+            this.btnChooseSourceTIF.Click += new System.EventHandler(this.ChooseSourceTIF_Click);
             // 
             // label5
             // 
@@ -232,7 +236,7 @@
             this.btnChooseDestXML.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             this.ToolTip.SetToolTip(this.btnChooseDestXML, "Select target XML folder");
             this.btnChooseDestXML.UseVisualStyleBackColor = true;
-            this.btnChooseDestXML.Click += new System.EventHandler(this.btnChooseDestXML_Click);
+            this.btnChooseDestXML.Click += new System.EventHandler(this.ChooseDestXML_Click);
             // 
             // btnChooseDestTIF
             // 
@@ -246,29 +250,29 @@
             this.btnChooseDestTIF.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             this.ToolTip.SetToolTip(this.btnChooseDestTIF, "Select target TIF folder");
             this.btnChooseDestTIF.UseVisualStyleBackColor = true;
-            this.btnChooseDestTIF.Click += new System.EventHandler(this.btnChooseDestTIF_Click);
+            this.btnChooseDestTIF.Click += new System.EventHandler(this.ChooseDestTIF_Click);
             // 
             // btnMove
             // 
-            this.btnMove.Location = new System.Drawing.Point(98, 211);
+            this.btnMove.Location = new System.Drawing.Point(8, 260);
             this.btnMove.Name = "btnMove";
             this.btnMove.Size = new System.Drawing.Size(75, 23);
             this.btnMove.TabIndex = 7;
             this.btnMove.Text = "&Move";
             this.ToolTip.SetToolTip(this.btnMove, "Start Moving Files");
             this.btnMove.UseVisualStyleBackColor = true;
-            this.btnMove.Click += new System.EventHandler(this.btnMove_Click);
+            this.btnMove.Click += new System.EventHandler(this.Move_Click);
             // 
             // btnReset
             // 
-            this.btnReset.Location = new System.Drawing.Point(179, 211);
+            this.btnReset.Location = new System.Drawing.Point(89, 260);
             this.btnReset.Name = "btnReset";
             this.btnReset.Size = new System.Drawing.Size(75, 23);
             this.btnReset.TabIndex = 7;
             this.btnReset.Text = "&Reset";
             this.ToolTip.SetToolTip(this.btnReset, "Clear Path fields");
             this.btnReset.UseVisualStyleBackColor = true;
-            this.btnReset.Click += new System.EventHandler(this.btnReset_Click);
+            this.btnReset.Click += new System.EventHandler(this.Reset_Click);
             // 
             // ToolStrip
             // 
@@ -276,7 +280,7 @@
             this.ToolStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.ProgressBar,
             this.Status});
-            this.ToolStrip.Location = new System.Drawing.Point(0, 408);
+            this.ToolStrip.Location = new System.Drawing.Point(0, 463);
             this.ToolStrip.Name = "ToolStrip";
             this.ToolStrip.RenderMode = System.Windows.Forms.ToolStripRenderMode.Professional;
             this.ToolStrip.Size = new System.Drawing.Size(456, 25);
@@ -313,7 +317,7 @@
             // 
             // btnCancel
             // 
-            this.btnCancel.Location = new System.Drawing.Point(341, 211);
+            this.btnCancel.Location = new System.Drawing.Point(251, 260);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(75, 23);
             this.btnCancel.TabIndex = 9;
@@ -324,18 +328,16 @@
             // 
             // panel1
             // 
-            this.panel1.Controls.Add(this.cbCreateTIFLog);
-            this.panel1.Controls.Add(this.cbCreateXMLLog);
-            this.panel1.Controls.Add(this.btnInvertPaths);
+            this.panel1.Controls.Add(this.groupBox1);
             this.panel1.Controls.Add(this.textBoxSourceXML);
-            this.panel1.Controls.Add(this.btnCancel);
-            this.panel1.Controls.Add(this.label9);
+            this.panel1.Controls.Add(this.btnInvertPaths);
             this.panel1.Controls.Add(this.label2);
             this.panel1.Controls.Add(this.label3);
-            this.panel1.Controls.Add(this.btnReset);
+            this.panel1.Controls.Add(this.btnCancel);
             this.panel1.Controls.Add(this.label5);
-            this.panel1.Controls.Add(this.btnMove);
+            this.panel1.Controls.Add(this.btnReset);
             this.panel1.Controls.Add(this.label4);
+            this.panel1.Controls.Add(this.btnMove);
             this.panel1.Controls.Add(this.btnChooseDestTIF);
             this.panel1.Controls.Add(this.label6);
             this.panel1.Controls.Add(this.btnChooseSourceTIF);
@@ -347,13 +349,49 @@
             this.panel1.Controls.Add(this.textBoxDestXML);
             this.panel1.Location = new System.Drawing.Point(5, 66);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(445, 246);
+            this.panel1.Size = new System.Drawing.Size(445, 296);
             this.panel1.TabIndex = 10;
+            // 
+            // groupBox1
+            // 
+            this.groupBox1.Controls.Add(this.comboFilesToMove);
+            this.groupBox1.Controls.Add(this.label9);
+            this.groupBox1.Controls.Add(this.cbCreateTIFLog);
+            this.groupBox1.Controls.Add(this.cbCreateXMLLog);
+            this.groupBox1.Controls.Add(this.label11);
+            this.groupBox1.Location = new System.Drawing.Point(7, 182);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(432, 72);
+            this.groupBox1.TabIndex = 20;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "Options";
+            // 
+            // comboFilesToMove
+            // 
+            this.comboFilesToMove.FormattingEnabled = true;
+            this.comboFilesToMove.Items.AddRange(new object[] {
+            "Both XML and TIF",
+            "XML only",
+            "TIF only"});
+            this.comboFilesToMove.Location = new System.Drawing.Point(62, 42);
+            this.comboFilesToMove.Name = "comboFilesToMove";
+            this.comboFilesToMove.Size = new System.Drawing.Size(138, 21);
+            this.comboFilesToMove.TabIndex = 20;
+            this.comboFilesToMove.SelectedIndexChanged += new System.EventHandler(this.comboFilesToMove_SelectedIndexChanged);
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(6, 19);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(79, 13);
+            this.label9.TabIndex = 12;
+            this.label9.Text = "Create Logs for";
             // 
             // cbCreateTIFLog
             // 
             this.cbCreateTIFLog.AutoSize = true;
-            this.cbCreateTIFLog.Location = new System.Drawing.Point(254, 187);
+            this.cbCreateTIFLog.Location = new System.Drawing.Point(152, 19);
             this.cbCreateTIFLog.Name = "cbCreateTIFLog";
             this.cbCreateTIFLog.Size = new System.Drawing.Size(66, 17);
             this.cbCreateTIFLog.TabIndex = 11;
@@ -364,7 +402,7 @@
             // cbCreateXMLLog
             // 
             this.cbCreateXMLLog.AutoSize = true;
-            this.cbCreateXMLLog.Location = new System.Drawing.Point(179, 187);
+            this.cbCreateXMLLog.Location = new System.Drawing.Point(85, 19);
             this.cbCreateXMLLog.Name = "cbCreateXMLLog";
             this.cbCreateXMLLog.Size = new System.Drawing.Size(72, 17);
             this.cbCreateXMLLog.TabIndex = 11;
@@ -372,39 +410,30 @@
             this.cbCreateXMLLog.UseVisualStyleBackColor = true;
             this.cbCreateXMLLog.CheckedChanged += new System.EventHandler(this.cbCreateXMLLog_CheckedChanged);
             // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.Location = new System.Drawing.Point(6, 44);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(50, 13);
+            this.label11.TabIndex = 19;
+            this.label11.Text = "File Type";
+            // 
             // btnInvertPaths
             // 
-            this.btnInvertPaths.Location = new System.Drawing.Point(260, 211);
+            this.btnInvertPaths.Location = new System.Drawing.Point(170, 260);
             this.btnInvertPaths.Name = "btnInvertPaths";
             this.btnInvertPaths.Size = new System.Drawing.Size(75, 23);
             this.btnInvertPaths.TabIndex = 10;
             this.btnInvertPaths.Text = "&Invert Paths";
             this.ToolTip.SetToolTip(this.btnInvertPaths, "Invert source and Destination paths");
             this.btnInvertPaths.UseVisualStyleBackColor = true;
-            this.btnInvertPaths.Click += new System.EventHandler(this.btnInvertPaths_Click);
-            // 
-            // label9
-            // 
-            this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(95, 187);
-            this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(79, 13);
-            this.label9.TabIndex = 12;
-            this.label9.Text = "Create Logs for";
-            // 
-            // label8
-            // 
-            this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(10, 319);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(57, 13);
-            this.label8.TabIndex = 12;
-            this.label8.Text = "Progress : ";
+            this.btnInvertPaths.Click += new System.EventHandler(this.InvertPaths_Click);
             // 
             // LabelXMLProgress
             // 
             this.LabelXMLProgress.AutoSize = true;
-            this.LabelXMLProgress.Location = new System.Drawing.Point(32, 341);
+            this.LabelXMLProgress.Location = new System.Drawing.Point(31, 27);
             this.LabelXMLProgress.Name = "LabelXMLProgress";
             this.LabelXMLProgress.Size = new System.Drawing.Size(73, 13);
             this.LabelXMLProgress.TabIndex = 13;
@@ -413,7 +442,7 @@
             // LabelTIFProgress
             // 
             this.LabelTIFProgress.AutoSize = true;
-            this.LabelTIFProgress.Location = new System.Drawing.Point(32, 363);
+            this.LabelTIFProgress.Location = new System.Drawing.Point(31, 49);
             this.LabelTIFProgress.Name = "LabelTIFProgress";
             this.LabelTIFProgress.Size = new System.Drawing.Size(67, 13);
             this.LabelTIFProgress.TabIndex = 13;
@@ -422,7 +451,7 @@
             // LabelMoveSize
             // 
             this.LabelMoveSize.AutoSize = true;
-            this.LabelMoveSize.Location = new System.Drawing.Point(32, 385);
+            this.LabelMoveSize.Location = new System.Drawing.Point(31, 71);
             this.LabelMoveSize.Name = "LabelMoveSize";
             this.LabelMoveSize.Size = new System.Drawing.Size(40, 13);
             this.LabelMoveSize.TabIndex = 14;
@@ -499,7 +528,7 @@
             // rbFCR
             // 
             this.rbFCR.AutoSize = true;
-            this.rbFCR.Location = new System.Drawing.Point(151, 35);
+            this.rbFCR.Location = new System.Drawing.Point(150, 35);
             this.rbFCR.Name = "rbFCR";
             this.rbFCR.Size = new System.Drawing.Size(46, 17);
             this.rbFCR.TabIndex = 18;
@@ -507,44 +536,42 @@
             this.rbFCR.UseVisualStyleBackColor = true;
             this.rbFCR.CheckedChanged += new System.EventHandler(this.ProcessChanged);
             // 
-            // label11
+            // rbValidation
             // 
-            this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(269, 39);
-            this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(37, 13);
-            this.label11.TabIndex = 19;
-            this.label11.Text = "Move ";
+            this.rbValidation.AutoSize = true;
+            this.rbValidation.Location = new System.Drawing.Point(202, 35);
+            this.rbValidation.Name = "rbValidation";
+            this.rbValidation.Size = new System.Drawing.Size(71, 17);
+            this.rbValidation.TabIndex = 18;
+            this.rbValidation.Text = "Validation";
+            this.rbValidation.UseVisualStyleBackColor = true;
+            this.rbValidation.CheckedChanged += new System.EventHandler(this.ProcessChanged);
             // 
-            // comboFilesToMove
+            // groupBox2
             // 
-            this.comboFilesToMove.FormattingEnabled = true;
-            this.comboFilesToMove.Items.AddRange(new object[] {
-            "Both XML and TIF",
-            "XML only",
-            "TIF only"});
-            this.comboFilesToMove.Location = new System.Drawing.Point(312, 36);
-            this.comboFilesToMove.Name = "comboFilesToMove";
-            this.comboFilesToMove.Size = new System.Drawing.Size(138, 21);
-            this.comboFilesToMove.TabIndex = 20;
-            this.comboFilesToMove.SelectedIndexChanged += new System.EventHandler(this.comboFilesToMove_SelectedIndexChanged);
+            this.groupBox2.Controls.Add(this.LabelXMLProgress);
+            this.groupBox2.Controls.Add(this.LabelTIFProgress);
+            this.groupBox2.Controls.Add(this.LabelMoveSize);
+            this.groupBox2.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.groupBox2.Location = new System.Drawing.Point(0, 366);
+            this.groupBox2.Name = "groupBox2";
+            this.groupBox2.Size = new System.Drawing.Size(456, 97);
+            this.groupBox2.TabIndex = 19;
+            this.groupBox2.TabStop = false;
+            this.groupBox2.Text = "Progress";
             // 
             // FormMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(456, 433);
+            this.ClientSize = new System.Drawing.Size(456, 488);
             this.ControlBox = false;
-            this.Controls.Add(this.comboFilesToMove);
-            this.Controls.Add(this.label11);
+            this.Controls.Add(this.groupBox2);
+            this.Controls.Add(this.rbValidation);
             this.Controls.Add(this.rbFCR);
             this.Controls.Add(this.rbVIL);
             this.Controls.Add(this.label10);
             this.Controls.Add(this.panelTitleBar);
-            this.Controls.Add(this.LabelMoveSize);
-            this.Controls.Add(this.LabelTIFProgress);
-            this.Controls.Add(this.LabelXMLProgress);
-            this.Controls.Add(this.label8);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.ToolStrip);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
@@ -557,8 +584,12 @@
             ((System.ComponentModel.ISupportInitialize)(this.ErrorProvider)).EndInit();
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
+            this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
             this.panelTitleBar.ResumeLayout(false);
             this.panelTitleBar.PerformLayout();
+            this.groupBox2.ResumeLayout(false);
+            this.groupBox2.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -594,7 +625,6 @@
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Label LabelTIFProgress;
         private System.Windows.Forms.Label LabelXMLProgress;
-        private System.Windows.Forms.Label label8;
         private System.Windows.Forms.Label LabelMoveSize;
         private System.Windows.Forms.Label LabelHelp;
         private System.Windows.Forms.ToolTip ToolTip;
@@ -609,6 +639,9 @@
         private System.Windows.Forms.ComboBox comboFilesToMove;
         private System.Windows.Forms.Label label11;
         private System.Windows.Forms.Label LabelMinimize;
+        private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.RadioButton rbValidation;
+        private System.Windows.Forms.GroupBox groupBox1;
     }
 }
 
