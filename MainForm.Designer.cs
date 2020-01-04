@@ -82,6 +82,7 @@
             this.rbFCR = new System.Windows.Forms.RadioButton();
             this.rbValidation = new System.Windows.Forms.RadioButton();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.btnUndo = new System.Windows.Forms.Button();
             this.ToolStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.ErrorProvider)).BeginInit();
             this.panel1.SuspendLayout();
@@ -263,7 +264,7 @@
             // 
             // btnMove
             // 
-            this.btnMove.Location = new System.Drawing.Point(60, 278);
+            this.btnMove.Location = new System.Drawing.Point(23, 278);
             this.btnMove.Name = "btnMove";
             this.btnMove.Size = new System.Drawing.Size(75, 23);
             this.btnMove.TabIndex = 7;
@@ -274,7 +275,7 @@
             // 
             // btnReset
             // 
-            this.btnReset.Location = new System.Drawing.Point(141, 278);
+            this.btnReset.Location = new System.Drawing.Point(104, 278);
             this.btnReset.Name = "btnReset";
             this.btnReset.Size = new System.Drawing.Size(75, 23);
             this.btnReset.TabIndex = 7;
@@ -326,7 +327,7 @@
             // 
             // btnCancel
             // 
-            this.btnCancel.Location = new System.Drawing.Point(303, 278);
+            this.btnCancel.Location = new System.Drawing.Point(347, 278);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(75, 23);
             this.btnCancel.TabIndex = 9;
@@ -337,6 +338,7 @@
             // 
             // panel1
             // 
+            this.panel1.Controls.Add(this.btnUndo);
             this.panel1.Controls.Add(this.groupBox1);
             this.panel1.Controls.Add(this.textBoxSourceXML);
             this.panel1.Controls.Add(this.btnInvertPaths);
@@ -510,7 +512,7 @@
             // 
             // btnInvertPaths
             // 
-            this.btnInvertPaths.Location = new System.Drawing.Point(222, 278);
+            this.btnInvertPaths.Location = new System.Drawing.Point(185, 278);
             this.btnInvertPaths.Name = "btnInvertPaths";
             this.btnInvertPaths.Size = new System.Drawing.Size(75, 23);
             this.btnInvertPaths.TabIndex = 10;
@@ -646,6 +648,16 @@
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Progress";
             // 
+            // btnUndo
+            // 
+            this.btnUndo.Location = new System.Drawing.Point(266, 278);
+            this.btnUndo.Name = "btnUndo";
+            this.btnUndo.Size = new System.Drawing.Size(75, 23);
+            this.btnUndo.TabIndex = 21;
+            this.btnUndo.Text = "&Undo";
+            this.btnUndo.UseVisualStyleBackColor = true;
+            this.btnUndo.Click += new System.EventHandler(this.Undo_Click);
+            // 
             // FormMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -738,6 +750,7 @@
         private System.Windows.Forms.RadioButton rbMoveCount;
         private System.Windows.Forms.RadioButton rbMovePercent;
         private System.Windows.Forms.RadioButton rbMoveAll;
+        private System.Windows.Forms.Button btnUndo;
     }
 }
 
