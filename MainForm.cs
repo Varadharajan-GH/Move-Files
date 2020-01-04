@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace Move_Files
@@ -39,7 +41,6 @@ namespace Move_Files
         private readonly FCRModel fcrModel;
         private readonly ValidationModel validationModel;
         #endregion Declaration
-
         public FormMain()
         {
             InitializeComponent();
@@ -160,6 +161,43 @@ namespace Move_Files
             textBoxDestXML.Enabled = true;
             btnChooseSourceXML.Enabled = true;
             btnChooseDestXML.Enabled = true;
+        }
+        private List<ItemDetail> GetItemDetails(string xmlFolder, string tifFolder)
+        {
+            List<ItemDetail> itemDetailList = new List<ItemDetail>();
+
+            foreach (string xmlfile in Directory.GetFiles(xmlFolder, "*.XML", SearchOption.TopDirectoryOnly))
+            {
+                ItemDetail itemDetail = new ItemDetail
+                {
+                    ItemName = Path.GetFileNameWithoutExtension(xmlfile),
+                    XmlPath = xmlfile,
+                    XmlSize = new FileInfo(xmlfile).Length
+                };
+
+                List<string> fList = new List<string>();
+                long totSize = 0;
+                foreach (string tiffile in Directory.GetFiles(tifFolder, itemDetail.ItemName + "*.TIF", SearchOption.TopDirectoryOnly))
+                {
+                    fList.Add(tiffile);
+                    totSize += new FileInfo(tiffile).Length;
+                }
+                itemDetail.TifDetail = new FilesDetail(fList, totSize);
+                itemDetailList.Add(itemDetail);
+            }
+            return itemDetailList;
+        }
+        private FilesDetail GetFilesDetail(string dirName, string pattern)
+        {
+            List<string> fileList = new List<string>();
+            long totalSize = 0;
+
+            foreach (string file in Directory.GetFiles(dirName, pattern, SearchOption.TopDirectoryOnly))
+            {
+                fileList.Add(file);
+                totalSize += new FileInfo(file).Length;
+            }
+            return new FilesDetail(fileList, totalSize);
         }
         #endregion Helper Functions
 
@@ -396,7 +434,6 @@ namespace Move_Files
             textBoxDestXML.Clear();
             textBoxDestTIF.Clear();
         }
-
         private void InvertPaths_Click(object sender, EventArgs e)
         {
             string temp;
@@ -423,26 +460,19 @@ namespace Move_Files
             timer.Restart();
             if (bMoveBoth)
             {
-                DirectoryInfo sourceXMLInfo = new DirectoryInfo(SourceXMLFolder);
-                DirectoryInfo sourceTIFInfo = new DirectoryInfo(SourceTIFFolder);
+                List<ItemDetail> itemDetialList = GetItemDetails(SourceXMLFolder, SourceTIFFolder);
 
-                foreach (FileInfo xmlfile in sourceXMLInfo.GetFiles("*.XML"))
-                {
-                    totalXMLFiles++;
-                    totalXMLSize += xmlfile.Length;
-
-                    foreach (FileInfo tiffile in sourceTIFInfo.GetFiles(Path.GetFileNameWithoutExtension(xmlfile.Name) + "*.TIF"))
-                    {
-                        totalTIFFiles++;
-                        totalTIFSize += tiffile.Length;
-                    }
-                }
-                if (totalXMLFiles == 0)
+                if (itemDetialList.Count == 0)
                 {
                     MessageBox.Show("No XML files found.");
                     Status.Text = "No XML files found.";
                     return;
                 }
+                totalXMLFiles = itemDetialList.Count;
+                totalXMLSize = itemDetialList.Sum(f => f.XmlSize);
+                totalTIFFiles = itemDetialList.Sum(f => f.TifDetail.filesList.Count);
+                totalTIFSize = itemDetialList.Sum(f => f.TifDetail.totalSize);
+
                 if (totalTIFFiles == 0)
                 {
                     if (MessageBox.Show("No corresponding TIF files found. Move only XMLs?", "Confirm Move!", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning) == DialogResult.Cancel)
@@ -458,34 +488,44 @@ namespace Move_Files
                     if (!double.TryParse(textBoxMovePercent.Text, out double percentFilesToMove))
                     {
                         MessageBox.Show("Files percent to Move is Invalid");
-                        ErrorProvider.SetError(textBoxMovePercent, "Enter numeric value only");
                         return;
                     }
-                    else
+                    if (percentFilesToMove > 100.0 || percentFilesToMove < 0.0)
                     {
-                        if (percentFilesToMove > 100.0)
-                        {
-                            MessageBox.Show("Files percent should not exceed 100");
-                            ErrorProvider.SetError(textBoxMovePercent, "Enter numeric value only");
-                            return;
-                        }
-                        numFilesToMove = (int)Math.Round(percentFilesToMove / 100.0 * totalXMLFiles);
+                        MessageBox.Show("Files percent should be between 0 and 100");
+                        return;
                     }
+                    numFilesToMove = (int)Math.Round(percentFilesToMove / 100.0 * totalXMLFiles);
+                    itemDetialList = itemDetialList.Take(numFilesToMove).ToList();
+                    totalXMLFiles = itemDetialList.Count;
+                    totalXMLSize = itemDetialList.Sum(f => f.XmlSize);
+                    totalTIFFiles = itemDetialList.Sum(f => f.TifDetail.filesList.Count);
+                    totalTIFSize = itemDetialList.Sum(f => f.TifDetail.totalSize);
+                    totalFileSize = totalXMLSize + totalTIFSize;
                 }
                 else if (rbMoveCount.Checked)
                 {
                     if (!int.TryParse(textBoxMoveCount.Text, out numFilesToMove))
                     {
                         MessageBox.Show("Files to Move count is Invalid");
-                        ErrorProvider.SetError(textBoxMoveCount, "Enter numeric value only");
                         return;
                     }
+                    if (numFilesToMove < 0)
+                    {
+                        MessageBox.Show("Files to Move count should not be negative;");
+                        return;
+                    }
+                    itemDetialList = itemDetialList.Take(numFilesToMove).ToList();
+                    totalXMLFiles = itemDetialList.Count;
+                    totalXMLSize = itemDetialList.Sum(f => f.XmlSize);
+                    totalTIFFiles = itemDetialList.Sum(f => f.TifDetail.filesList.Count);
+                    totalTIFSize = itemDetialList.Sum(f => f.TifDetail.totalSize);
+                    totalFileSize = totalXMLSize + totalTIFSize;
                 }
-                else
-                {
-                    numFilesToMove = totalXMLFiles;
-                }
-                foreach (FileInfo xmlfile in sourceXMLInfo.GetFiles("*.XML"))
+
+                File.AppendAllText(CopiedXMLLog, Environment.NewLine + "===========");
+                File.AppendAllText(CopiedTIFLog, Environment.NewLine + "===========");
+                foreach (ItemDetail itemDetail in itemDetialList)
                 {
                     if (BGWorker.CancellationPending)
                     {
@@ -493,55 +533,55 @@ namespace Move_Files
                         BGWorker.ReportProgress(0);
                         return;
                     }
-                    if (copiedXMLFiles >= numFilesToMove) return;
                     try
                     {
-                        Status.Text = "Moving " + xmlfile.Name;
-                        File.Copy(xmlfile.FullName, Path.Combine(DestXMLFolder, xmlfile.Name), true);
+                        Status.Text = "Moving XML" + itemDetail.ItemName;
+                        File.Copy(itemDetail.XmlPath, Path.Combine(DestXMLFolder, itemDetail.ItemName + ".XML"), true);
                         if (bEnableXMLLog)
-                            File.AppendAllText(CopiedXMLLog, Environment.NewLine + Path.GetFileNameWithoutExtension(xmlfile.Name));
-                        copiedXMLFiles++;                        
-                        xmlfile.Delete();                        
+                            File.AppendAllText(CopiedXMLLog, Environment.NewLine + itemDetail.ItemName);
+                        copiedXMLFiles++;
+                        File.Delete(itemDetail.XmlPath);
                     }
                     catch
                     {
-                        Status.Text = "Error Moving " + xmlfile.Name;
+                        Status.Text = "Error Moving " + itemDetail.ItemName;
                         errorXMLFiles++;
                         if (bEnableXMLLog)
-                            File.AppendAllText(ErrorXMLLog, Environment.NewLine + Path.GetFileNameWithoutExtension(xmlfile.Name));
+                            File.AppendAllText(ErrorXMLLog, Environment.NewLine + itemDetail.ItemName);
                     }
                     finally
                     {
-                        totalCopiedSize += xmlfile.Length;
+                        totalCopiedSize += itemDetail.XmlSize;
                         BGWorker.ReportProgress((int)(totalCopiedSize / (float)totalFileSize * 100));
                     }
 
-                    foreach (FileInfo tiffile in sourceTIFInfo.GetFiles(Path.GetFileNameWithoutExtension(xmlfile.Name) + "*.TIF"))
+                    foreach (string tiffile in itemDetail.TifDetail.filesList)
                     {
-                        if (BGWorker.CancellationPending)
-                        {
-                            e.Cancel = true;
-                            BGWorker.ReportProgress(0);
-                        }
+                        //if (BGWorker.CancellationPending)
+                        //{
+                        //    e.Cancel = true;
+                        //    BGWorker.ReportProgress(0);
+                        //}
                         try
                         {
-                            Status.Text = "Moving " + tiffile.Name;
-                            File.Copy(tiffile.FullName, Path.Combine(DestTIFFolder, tiffile.Name), true);
+                            Status.Text = "Moving " + Path.GetFileName(tiffile);
+                            totalCopiedSize += new FileInfo(tiffile).Length;
+                            File.Copy(tiffile, Path.Combine(DestTIFFolder, Path.GetFileNameWithoutExtension(tiffile) + ".TIF"), true);
                             if (bEnableTIFLog)
-                                File.AppendAllText(CopiedTIFLog, Environment.NewLine + Path.GetFileNameWithoutExtension(tiffile.Name));
+                                File.AppendAllText(CopiedTIFLog, Environment.NewLine + Path.GetFileNameWithoutExtension(tiffile));
                             copiedTIFFiles++;
-                            tiffile.Delete();
+                            File.Delete(tiffile);
                         }
                         catch
                         {
-                            Status.Text = "Moving " + tiffile.Name;
+                            Status.Text = "Moving " + Path.GetFileNameWithoutExtension(tiffile);
+                            totalCopiedSize += new FileInfo(tiffile).Length;
                             if (bEnableTIFLog)
-                                File.AppendAllText(ErrorTIFLog, Environment.NewLine + Path.GetFileNameWithoutExtension(tiffile.Name));
+                                File.AppendAllText(ErrorTIFLog, Environment.NewLine + Path.GetFileNameWithoutExtension(tiffile));
                             errorTIFFiles++;
                         }
                         finally
                         {
-                            totalCopiedSize += tiffile.Length;
                             BGWorker.ReportProgress((int)(totalCopiedSize / (float)totalFileSize * 100));
                         }
                     }
@@ -549,56 +589,60 @@ namespace Move_Files
             }
             else if (bMoveXMLOnly)
             {
-                DirectoryInfo sourceXMLInfo = new DirectoryInfo(SourceXMLFolder);
+                FilesDetail xmlDetial = GetFilesDetail(SourceXMLFolder, "*.XML");
 
-                foreach (FileInfo xmlfile in sourceXMLInfo.GetFiles("*.XML"))
-                {
-                    totalXMLFiles++;
-                    totalXMLSize += xmlfile.Length;
-                }
-                totalFileSize = totalXMLSize;
-                if (totalXMLFiles == 0)
+                if (xmlDetial.filesList.Count == 0)
                 {
                     MessageBox.Show("No XML files found.");
                     Status.Text = "No XML files found.";
                     return;
                 }
+                totalXMLFiles = xmlDetial.filesList.Count;
+                totalXMLSize = xmlDetial.totalSize;
+                totalTIFFiles = 0;
+                totalTIFSize = 0;
+
+                totalFileSize = totalXMLSize;
 
                 int numFilesToMove;
                 if (rbMovePercent.Checked)
                 {
-                    if (!double.TryParse(textBoxMoveCount.Text, out double percentFilesToMove))
+                    if (!double.TryParse(textBoxMovePercent.Text, out double percentFilesToMove))
                     {
                         MessageBox.Show("Files percent to Move is Invalid");
-                        ErrorProvider.SetError(textBoxMovePercent, "Enter numeric value only");
                         return;
                     }
-                    else
+                    if (percentFilesToMove > 100.0 || percentFilesToMove < 0.0)
                     {
-                        if (percentFilesToMove > 100.0)
-                        {
-                            MessageBox.Show("Files percent should not exceed 100");
-                            ErrorProvider.SetError(textBoxMovePercent, "Enter numeric value only");
-                            return;
-                        }
-                        numFilesToMove = (int)Math.Round(percentFilesToMove / 100.0 * totalXMLFiles);
+                        MessageBox.Show("Files percent should be between 0 and 100");
+                        return;
                     }
+                    numFilesToMove = (int)Math.Round(percentFilesToMove / 100.0 * totalXMLFiles);
+                    xmlDetial.filesList = xmlDetial.filesList.Take(numFilesToMove).ToList();
+                    totalXMLFiles = xmlDetial.filesList.Count;
+                    totalXMLSize = xmlDetial.totalSize;
+                    totalFileSize = totalXMLSize;
                 }
                 else if (rbMoveCount.Checked)
                 {
                     if (!int.TryParse(textBoxMoveCount.Text, out numFilesToMove))
                     {
                         MessageBox.Show("Files to Move count is Invalid");
-                        ErrorProvider.SetError(textBoxMoveCount, "Enter numeric value only");
                         return;
                     }
-                }
-                else
-                {
-                    numFilesToMove = totalXMLFiles;
+                    if (numFilesToMove < 0)
+                    {
+                        MessageBox.Show("Files to Move count should not be negative;");
+                        return;
+                    }
+                    xmlDetial.filesList = xmlDetial.filesList.Take(numFilesToMove).ToList();
+                    totalXMLFiles = xmlDetial.filesList.Count;
+                    totalXMLSize = xmlDetial.totalSize;
+                    totalFileSize = totalXMLSize;
                 }
 
-                foreach (FileInfo xmlfile in sourceXMLInfo.GetFiles("*.XML"))
+                File.AppendAllText(CopiedXMLLog, Environment.NewLine + "===========");
+                foreach (string xmlfile in xmlDetial.filesList)
                 {
                     if (BGWorker.CancellationPending)
                     {
@@ -606,82 +650,86 @@ namespace Move_Files
                         BGWorker.ReportProgress(0);
                         return;
                     }
-                    if (copiedXMLFiles >= numFilesToMove) return;
                     try
                     {
-                        Status.Text = "Moving " + xmlfile.Name;
-                        File.Copy(xmlfile.FullName, Path.Combine(DestXMLFolder, xmlfile.Name), true);
+                        Status.Text = "Moving XML" + Path.GetFileName(xmlfile);
+                        totalCopiedSize += new FileInfo(xmlfile).Length;
+                        File.Copy(xmlfile, Path.Combine(DestXMLFolder, Path.GetFileName(xmlfile)), true);
                         if (bEnableXMLLog)
-                            File.AppendAllText(CopiedXMLLog, Environment.NewLine + Path.GetFileNameWithoutExtension(xmlfile.Name));
+                            File.AppendAllText(CopiedXMLLog, Environment.NewLine + Path.GetFileNameWithoutExtension(xmlfile));
                         copiedXMLFiles++;
-                        xmlfile.Delete();
+                        File.Delete(xmlfile);
                     }
                     catch
                     {
-                        Status.Text = "Error Moving " + xmlfile.Name;
+                        Status.Text = "Error Moving " + Path.GetFileName(xmlfile);
+                        totalCopiedSize += new FileInfo(xmlfile).Length;
                         errorXMLFiles++;
                         if (bEnableXMLLog)
-                            File.AppendAllText(ErrorXMLLog, Environment.NewLine + Path.GetFileNameWithoutExtension(xmlfile.Name));
+                            File.AppendAllText(ErrorXMLLog, Environment.NewLine + Path.GetFileNameWithoutExtension(xmlfile));
                     }
                     finally
                     {
-                        totalCopiedSize += xmlfile.Length;
                         BGWorker.ReportProgress((int)(totalCopiedSize / (float)totalFileSize * 100));
                     }
                 }
             }
             else if (bMoveTIFOnly)
             {
-                DirectoryInfo sourceTIFInfo = new DirectoryInfo(SourceTIFFolder);
+                FilesDetail tifDetial = GetFilesDetail(SourceTIFFolder, "*.TIF");
 
-                foreach (FileInfo TIFfile in sourceTIFInfo.GetFiles("*.TIF"))
-                {
-                    totalTIFFiles++;
-                    totalTIFSize += TIFfile.Length;
-                }
-                totalFileSize = totalTIFSize;
-                if (totalTIFFiles == 0)
+                if (tifDetial.filesList.Count == 0)
                 {
                     MessageBox.Show("No TIF files found.");
                     Status.Text = "No TIF files found.";
                     return;
                 }
+                totalTIFFiles = tifDetial.filesList.Count;
+                totalTIFSize = tifDetial.totalSize;
+                totalXMLFiles = 0;
+                totalXMLSize = 0;
+
+                totalFileSize = totalTIFSize;
 
                 int numFilesToMove;
                 if (rbMovePercent.Checked)
                 {
-                    if (!double.TryParse(textBoxMoveCount.Text, out double percentFilesToMove))
+                    if (!double.TryParse(textBoxMovePercent.Text, out double percentFilesToMove))
                     {
                         MessageBox.Show("Files percent to Move is Invalid");
-                        ErrorProvider.SetError(textBoxMovePercent, "Enter numeric value only");
                         return;
                     }
-                    else
+                    if (percentFilesToMove > 100.0 || percentFilesToMove < 0.0)
                     {
-                        if (percentFilesToMove > 100.0)
-                        {
-                            MessageBox.Show("Files percent should not exceed 100");
-                            ErrorProvider.SetError(textBoxMovePercent, "Enter numeric value only");
-                            return;
-                        }
-                        numFilesToMove = (int)Math.Round(percentFilesToMove / 100.0 * totalXMLFiles);
+                        MessageBox.Show("Files percent should be between 0 and 100");
+                        return;
                     }
+                    numFilesToMove = (int)Math.Round(percentFilesToMove / 100.0 * totalTIFFiles);
+                    tifDetial.filesList = tifDetial.filesList.Take(numFilesToMove).ToList();
+                    totalTIFFiles = tifDetial.filesList.Count;
+                    totalTIFSize = tifDetial.totalSize;
+                    totalFileSize = totalTIFSize;
                 }
                 else if (rbMoveCount.Checked)
                 {
                     if (!int.TryParse(textBoxMoveCount.Text, out numFilesToMove))
                     {
                         MessageBox.Show("Files to Move count is Invalid");
-                        ErrorProvider.SetError(textBoxMoveCount, "Enter numeric value only");
                         return;
                     }
-                }
-                else
-                {
-                    numFilesToMove = totalXMLFiles;
+                    if (numFilesToMove < 0)
+                    {
+                        MessageBox.Show("Files to Move count should not be negative;");
+                        return;
+                    }
+                    tifDetial.filesList = tifDetial.filesList.Take(numFilesToMove).ToList();
+                    totalTIFFiles = tifDetial.filesList.Count;
+                    totalTIFSize = tifDetial.totalSize;
+                    totalFileSize = totalTIFSize;
                 }
 
-                foreach (FileInfo tiffile in sourceTIFInfo.GetFiles("*.TIF"))
+                File.AppendAllText(CopiedTIFLog, Environment.NewLine + "===========");
+                foreach (string tiffile in tifDetial.filesList)
                 {
                     if (BGWorker.CancellationPending)
                     {
@@ -689,26 +737,26 @@ namespace Move_Files
                         BGWorker.ReportProgress(0);
                         return;
                     }
-                    if (copiedXMLFiles >= numFilesToMove) return;
                     try
                     {
-                        Status.Text = "Moving " + tiffile.Name;
-                        File.Copy(tiffile.FullName, Path.Combine(DestTIFFolder, tiffile.Name), true);
+                        Status.Text = "Moving " + Path.GetFileName(tiffile);
+                        totalCopiedSize += new FileInfo(tiffile).Length;
+                        File.Copy(tiffile, Path.Combine(DestTIFFolder, Path.GetFileName(tiffile)), true);
                         if (bEnableTIFLog)
-                            File.AppendAllText(CopiedTIFLog, Environment.NewLine + Path.GetFileNameWithoutExtension(tiffile.Name));
+                            File.AppendAllText(CopiedTIFLog, Environment.NewLine + Path.GetFileNameWithoutExtension(tiffile));
                         copiedTIFFiles++;
-                        tiffile.Delete();
+                        File.Delete(tiffile);
                     }
                     catch
                     {
-                        Status.Text = "Error Moving " + tiffile.Name;
+                        Status.Text = "Error Moving " + Path.GetFileName(tiffile);
+                        totalCopiedSize += new FileInfo(tiffile).Length;
                         errorTIFFiles++;
                         if (bEnableTIFLog)
-                            File.AppendAllText(ErrorTIFLog, Environment.NewLine + Path.GetFileNameWithoutExtension(tiffile.Name));
+                            File.AppendAllText(ErrorTIFLog, Environment.NewLine + Path.GetFileNameWithoutExtension(tiffile));
                     }
                     finally
                     {
-                        totalCopiedSize += tiffile.Length;
                         BGWorker.ReportProgress((int)(totalCopiedSize / (float)totalFileSize * 100));
                     }
                 }
@@ -719,7 +767,7 @@ namespace Move_Files
                 MessageBox.Show("Select what to move.");
                 return;
             }
-        }
+        }     
         private void BGWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
             LabelXMLProgress.Text = $"{copiedXMLFiles} of {totalXMLFiles} XML files moved. {errorXMLFiles} errors.";
@@ -739,8 +787,12 @@ namespace Move_Files
             }
             else
             {
-                Status.Text = "Done!";
+                Status.Text = "Done";
                 ProgressBar.Value = 0;
+                if (errorTIFFiles != 0 || errorXMLFiles != 0)
+                {
+                    MessageBox.Show("Some errors occured while moving files. Review error logs and verify moved files.");
+                }
                 if (totalXMLFiles == 0 && totalTIFFiles == 0)
                 {
                     LabelXMLProgress.Text = string.Empty;
