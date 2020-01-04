@@ -329,7 +329,7 @@ namespace Move_Files
                 textBoxDestXML.Text = DestXMLFolder;
                 ErrorProvider.SetError(textBoxDestXML, string.Empty);
             }
-        }        
+        }
 
         private void ChooseDestTIF_Click(object sender, EventArgs e)
         {
@@ -358,7 +358,7 @@ namespace Move_Files
                 CopiedTIFLog = Path.Combine(LogPath, $"{processModel.GetCopiedTIFLogPrefix()}_{DateString}.log");
                 ErrorXMLLog = Path.Combine(LogPath, $"{processModel.GetErrorXMLLogPrefix()}_{DateString}.log");
                 ErrorTIFLog = Path.Combine(LogPath, $"{processModel.GetErrorTIFLogPrefix()}_{DateString}.log");
-                UndoErrorLog= Path.Combine(LogPath, $"UndoError_{DateString}.log");
+                UndoErrorLog = Path.Combine(LogPath, $"UndoError_{DateString}.log");
             }
 
             if (!Directory.Exists(textBoxSourceXML.Text))
@@ -841,7 +841,7 @@ namespace Move_Files
                 MessageBox.Show("Select what to move.");
                 return;
             }
-        }     
+        }
         private void BGWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
             LabelXMLProgress.Text = $"{movedXMLFiles} of {totalXMLFiles} XML files moved. {errorXMLFiles} errors.";
