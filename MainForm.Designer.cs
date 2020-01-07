@@ -55,6 +55,7 @@
             this.BGWorker = new System.ComponentModel.BackgroundWorker();
             this.btnCancel = new System.Windows.Forms.Button();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.btnUndo = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.panel2 = new System.Windows.Forms.Panel();
             this.label12 = new System.Windows.Forms.Label();
@@ -82,7 +83,6 @@
             this.rbFCR = new System.Windows.Forms.RadioButton();
             this.rbValidation = new System.Windows.Forms.RadioButton();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.btnUndo = new System.Windows.Forms.Button();
             this.ToolStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.ErrorProvider)).BeginInit();
             this.panel1.SuspendLayout();
@@ -363,6 +363,16 @@
             this.panel1.Size = new System.Drawing.Size(445, 310);
             this.panel1.TabIndex = 10;
             // 
+            // btnUndo
+            // 
+            this.btnUndo.Location = new System.Drawing.Point(266, 278);
+            this.btnUndo.Name = "btnUndo";
+            this.btnUndo.Size = new System.Drawing.Size(75, 23);
+            this.btnUndo.TabIndex = 21;
+            this.btnUndo.Text = "&Undo";
+            this.btnUndo.UseVisualStyleBackColor = true;
+            this.btnUndo.Click += new System.EventHandler(this.Undo_Click);
+            // 
             // groupBox1
             // 
             this.groupBox1.Controls.Add(this.panel2);
@@ -395,6 +405,7 @@
             // label12
             // 
             this.label12.AutoSize = true;
+            this.label12.BackColor = System.Drawing.Color.Transparent;
             this.label12.Location = new System.Drawing.Point(110, 52);
             this.label12.Name = "label12";
             this.label12.Size = new System.Drawing.Size(25, 13);
@@ -647,16 +658,6 @@
             this.groupBox2.TabIndex = 19;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Progress";
-            // 
-            // btnUndo
-            // 
-            this.btnUndo.Location = new System.Drawing.Point(266, 278);
-            this.btnUndo.Name = "btnUndo";
-            this.btnUndo.Size = new System.Drawing.Size(75, 23);
-            this.btnUndo.TabIndex = 21;
-            this.btnUndo.Text = "&Undo";
-            this.btnUndo.UseVisualStyleBackColor = true;
-            this.btnUndo.Click += new System.EventHandler(this.Undo_Click);
             // 
             // FormMain
             // 

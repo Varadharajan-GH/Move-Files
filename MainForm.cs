@@ -66,6 +66,34 @@ namespace Move_Files
 
             DateString = DateTime.Now.ToString("yyMMdd");
             LogPath = Directory.CreateDirectory(Path.GetFullPath("./MoveFilesLogs/")).FullName;
+            btnMove.Enabled = false;
+            string result = "Enter password";
+
+            if (ShowInputDialog(ref result) == DialogResult.OK)
+            {
+                if (result == "godseeseverything")
+                {
+                    DateTime nistDateTime = GetNistTime();
+                    DateTime expireDateTime = new DateTime(2020, 3, 27);
+
+                    if (expireDateTime.Subtract(nistDateTime).Days > 0)
+                    {
+                        btnMove.Enabled = true;
+                    }
+                    else
+                    {
+                        btnMove.Enabled = false;
+                        MessageBox.Show("Your free trail period expired. Contact Developer.");
+                        Environment.Exit(0);
+                    }
+                }
+                else
+                {
+                    btnMove.Enabled = false;
+                    MessageBox.Show("Wrong password.");
+                    Environment.Exit(0);
+                }
+            }
         }
 
         #region Helper Functions
@@ -204,6 +232,63 @@ namespace Move_Files
             }
             return new FilesDetail(fileList, totalSize);
         }
+        private static DialogResult ShowInputDialog(ref string input)
+        {
+            Size size = new Size(200, 70);
+            Form inputBox = new Form
+            {
+                FormBorderStyle = FormBorderStyle.FixedDialog,
+                ClientSize = size,
+                Text = "Name"
+            };
+
+            TextBox textBox = new TextBox
+            {
+                Size = new Size(size.Width - 10, 23),
+                Location = new Point(5, 5),
+                Text = input,
+                PasswordChar = '*'
+            };
+            inputBox.Controls.Add(textBox);
+
+            Button okButton = new Button
+            {
+                DialogResult = DialogResult.OK,
+                Name = "okButton",
+                Size = new Size(75, 23),
+                Text = "&OK",
+                Location = new Point(size.Width - 80 - 80, 39)
+            };
+            inputBox.Controls.Add(okButton);
+
+            Button cancelButton = new Button
+            {
+                DialogResult = DialogResult.Cancel,
+                Name = "cancelButton",
+                Size = new Size(75, 23),
+                Text = "&Cancel",
+                Location = new Point(size.Width - 80, 39)
+            };
+            inputBox.Controls.Add(cancelButton);
+
+            inputBox.AcceptButton = okButton;
+            inputBox.CancelButton = cancelButton;
+            inputBox.StartPosition = FormStartPosition.CenterParent;
+
+            DialogResult result = inputBox.ShowDialog();
+            input = textBox.Text;
+            return result;
+        }
+        public static DateTime GetNistTime()
+        {
+            System.Net.HttpWebRequest myHttpWebRequest = (System.Net.HttpWebRequest)System.Net.WebRequest.Create("http://www.google.com");
+            System.Net.WebResponse response = myHttpWebRequest.GetResponse();
+            string todaysDates = response.Headers["date"];
+            return DateTime.ParseExact(todaysDates,
+                                       "ddd, dd MMM yyyy HH:mm:ss 'GMT'",
+                                       System.Globalization.CultureInfo.InvariantCulture.DateTimeFormat,
+                                       System.Globalization.DateTimeStyles.AssumeUniversal);
+        }
         #endregion Helper Functions
 
         #region Window Controls
@@ -238,6 +323,9 @@ namespace Move_Files
             HelpText.AppendLine("source TIF folder to target TIF folder.");
             HelpText.AppendLine();
             HelpText.AppendLine("   Tool will also create logs for Moved files in Log folder");
+            HelpText.AppendLine();
+            HelpText.AppendLine();
+            HelpText.AppendLine("Reach developer at varadhamca.1887@gmail.com");
             MessageBox.Show(HelpText.ToString(), "Move Files", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
         private void LabelHelp_MouseEnter(object sender, EventArgs e)
@@ -342,6 +430,7 @@ namespace Move_Files
                 ErrorProvider.SetError(textBoxDestTIF, string.Empty);
             }
         }
+
         #endregion Folder Dialog
 
         #region Tool Control
@@ -575,8 +664,8 @@ namespace Move_Files
                     MessageBox.Show("No files to move.");
                     return;
                 }
-                File.AppendAllText(CopiedXMLLog, Environment.NewLine + "===========");
-                File.AppendAllText(CopiedTIFLog, Environment.NewLine + "===========");
+                if (bEnableXMLLog) File.AppendAllText(CopiedXMLLog, Environment.NewLine + "===========");
+                if (bEnableTIFLog) File.AppendAllText(CopiedTIFLog, Environment.NewLine + "===========");
                 foreach (ItemDetail itemDetail in itemDetialList)
                 {
                     if (BGWorker.CancellationPending)
@@ -592,8 +681,7 @@ namespace Move_Files
                         //File.Copy(itemDetail.XmlPath, Path.Combine(DestXMLFolder, itemDetail.ItemName + ".XML"), true);
                         SourceFiles.Add(itemDetail.XmlPath);
                         DestFiles.Add(Path.Combine(DestXMLFolder, itemDetail.ItemName + ".XML"));
-                        if (bEnableXMLLog)
-                            File.AppendAllText(CopiedXMLLog, Environment.NewLine + itemDetail.ItemName);
+                        if (bEnableXMLLog) File.AppendAllText(CopiedXMLLog, Environment.NewLine + itemDetail.ItemName);
                         movedXMLFiles++;
                         //File.Delete(itemDetail.XmlPath);
                     }
@@ -601,8 +689,7 @@ namespace Move_Files
                     {
                         Status.Text = "Error Moving " + itemDetail.ItemName;
                         errorXMLFiles++;
-                        if (bEnableXMLLog)
-                            File.AppendAllText(ErrorXMLLog, Environment.NewLine + itemDetail.ItemName);
+                        if (bEnableXMLLog) File.AppendAllText(ErrorXMLLog, Environment.NewLine + itemDetail.ItemName);
                     }
                     finally
                     {
@@ -625,8 +712,7 @@ namespace Move_Files
                             //File.Copy(tiffile, Path.Combine(DestTIFFolder, Path.GetFileNameWithoutExtension(tiffile) + ".TIF"), true);
                             SourceFiles.Add(tiffile);
                             DestFiles.Add(Path.Combine(DestTIFFolder, Path.GetFileNameWithoutExtension(tiffile) + ".TIF"));
-                            if (bEnableTIFLog)
-                                File.AppendAllText(CopiedTIFLog, Environment.NewLine + Path.GetFileNameWithoutExtension(tiffile));
+                            if (bEnableTIFLog) File.AppendAllText(CopiedTIFLog, Environment.NewLine + Path.GetFileNameWithoutExtension(tiffile));
                             movedTIFFiles++;
                             //File.Delete(tiffile);
                         }
@@ -704,7 +790,7 @@ namespace Move_Files
                     MessageBox.Show("No files to move.");
                     return;
                 }
-                File.AppendAllText(CopiedXMLLog, Environment.NewLine + "===========");
+                if (bEnableXMLLog) File.AppendAllText(CopiedXMLLog, Environment.NewLine + "===========");
                 foreach (string xmlfile in xmlDetial.filesList)
                 {
                     if (BGWorker.CancellationPending)
@@ -721,8 +807,7 @@ namespace Move_Files
                         //File.Copy(xmlfile, Path.Combine(DestXMLFolder, Path.GetFileName(xmlfile)), true);
                         SourceFiles.Add(xmlfile);
                         DestFiles.Add(Path.Combine(DestXMLFolder, Path.GetFileName(xmlfile)));
-                        if (bEnableXMLLog)
-                            File.AppendAllText(CopiedXMLLog, Environment.NewLine + Path.GetFileNameWithoutExtension(xmlfile));
+                        if (bEnableXMLLog) File.AppendAllText(CopiedXMLLog, Environment.NewLine + Path.GetFileNameWithoutExtension(xmlfile));
                         movedXMLFiles++;
                         //File.Delete(xmlfile);
                     }
@@ -799,7 +884,7 @@ namespace Move_Files
                     MessageBox.Show("No files to move.");
                     return;
                 }
-                File.AppendAllText(CopiedTIFLog, Environment.NewLine + "===========");
+                if (bEnableTIFLog) File.AppendAllText(CopiedTIFLog, Environment.NewLine + "===========");
                 foreach (string tiffile in tifDetial.filesList)
                 {
                     if (BGWorker.CancellationPending)
@@ -816,8 +901,7 @@ namespace Move_Files
                         //File.Copy(tiffile, Path.Combine(DestTIFFolder, Path.GetFileName(tiffile)), true);
                         SourceFiles.Add(tiffile);
                         DestFiles.Add(Path.Combine(DestTIFFolder, Path.GetFileName(tiffile)));
-                        if (bEnableTIFLog)
-                            File.AppendAllText(CopiedTIFLog, Environment.NewLine + Path.GetFileNameWithoutExtension(tiffile));
+                        if (bEnableTIFLog) File.AppendAllText(CopiedTIFLog, Environment.NewLine + Path.GetFileNameWithoutExtension(tiffile));
                         movedTIFFiles++;
                         //File.Delete(tiffile);
                     }
@@ -882,7 +966,7 @@ namespace Move_Files
         }
         #endregion BG Worker
 
-        #region Events
+        #region Events        
         private void TextBoxSourceXML_TextChanged(object sender, EventArgs e)
         {
             SourceXMLFolder = textBoxSourceXML.Text;
