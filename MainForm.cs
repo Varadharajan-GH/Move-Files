@@ -67,13 +67,46 @@ namespace Move_Files
             DateString = DateTime.Now.ToString("yyMMdd");
             LogPath = Directory.CreateDirectory(Path.GetFullPath("./MoveFilesLogs/")).FullName;
             btnMove.Enabled = false;
-            string result = "Enter password";
+            ValidateLogin();
+        }
+
+        private void ValidateLogin()
+        {
+            string result = "";
 
             if (ShowInputDialog(ref result) == DialogResult.OK)
             {
-                if (result == "godseeseverything")
+                //string passwordHash = BCrypt.Net.BCrypt.HashPassword(result);
+                string storedPass;
+                try
                 {
-                    DateTime nistDateTime = GetNistTime();
+                    storedPass = File.ReadAllText("pph.db").Trim();
+                }
+                catch (FileNotFoundException)
+                {
+                    MessageBox.Show("pph.db file missing.");
+                    Environment.Exit(0);
+                    throw;
+                }
+                catch
+                {
+                    MessageBox.Show("Could not read pph.db.");
+                    Environment.Exit(0);
+                    throw;
+                }
+                if (BCrypt.Net.BCrypt.Verify(result, storedPass))
+                {
+                    DateTime nistDateTime;
+                    try
+                    {
+                        nistDateTime = GetNistTime();
+                    }
+                    catch
+                    {
+                        MessageBox.Show("Connection error. Make sure you are connected to internet.");
+                        Environment.Exit(0);
+                        throw;
+                    }
                     DateTime expireDateTime = new DateTime(2020, 3, 27);
 
                     if (expireDateTime.Subtract(nistDateTime).Days > 0)
@@ -93,6 +126,10 @@ namespace Move_Files
                     MessageBox.Show("Wrong password.");
                     Environment.Exit(0);
                 }
+            }
+            else
+            {
+                Environment.Exit(0);
             }
         }
 
@@ -238,8 +275,9 @@ namespace Move_Files
             Form inputBox = new Form
             {
                 FormBorderStyle = FormBorderStyle.FixedDialog,
+                ControlBox=false,
                 ClientSize = size,
-                Text = "Name"
+                Text = "Enter Password"
             };
 
             TextBox textBox = new TextBox
@@ -281,13 +319,21 @@ namespace Move_Files
         }
         public static DateTime GetNistTime()
         {
-            System.Net.HttpWebRequest myHttpWebRequest = (System.Net.HttpWebRequest)System.Net.WebRequest.Create("http://www.google.com");
-            System.Net.WebResponse response = myHttpWebRequest.GetResponse();
-            string todaysDates = response.Headers["date"];
-            return DateTime.ParseExact(todaysDates,
-                                       "ddd, dd MMM yyyy HH:mm:ss 'GMT'",
-                                       System.Globalization.CultureInfo.InvariantCulture.DateTimeFormat,
-                                       System.Globalization.DateTimeStyles.AssumeUniversal);
+
+            try
+            {
+                System.Net.HttpWebRequest myHttpWebRequest = (System.Net.HttpWebRequest)System.Net.WebRequest.Create("http://www.google.com");
+                System.Net.WebResponse response = myHttpWebRequest.GetResponse();
+                string todaysDates = response.Headers["date"];
+                return DateTime.ParseExact(todaysDates,
+                                           "ddd, dd MMM yyyy HH:mm:ss 'GMT'",
+                                           System.Globalization.CultureInfo.InvariantCulture.DateTimeFormat,
+                                           System.Globalization.DateTimeStyles.AssumeUniversal);
+            }
+            catch
+            {
+                throw;
+            }
         }
         #endregion Helper Functions
 
