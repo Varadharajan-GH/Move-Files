@@ -83,6 +83,7 @@
             this.rbFCR = new System.Windows.Forms.RadioButton();
             this.rbValidation = new System.Windows.Forms.RadioButton();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.LLblCSVMerge = new System.Windows.Forms.LinkLabel();
             this.ToolStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.ErrorProvider)).BeginInit();
             this.panel1.SuspendLayout();
@@ -128,6 +129,7 @@
             this.label2.Size = new System.Drawing.Size(70, 13);
             this.label2.TabIndex = 2;
             this.label2.Text = "XML Folder : ";
+            this.label2.Click += new System.EventHandler(this.label2_Click);
             // 
             // label3
             // 
@@ -659,12 +661,24 @@
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Progress";
             // 
+            // LLblCSVMerge
+            // 
+            this.LLblCSVMerge.AutoSize = true;
+            this.LLblCSVMerge.Location = new System.Drawing.Point(395, 30);
+            this.LLblCSVMerge.Name = "LLblCSVMerge";
+            this.LLblCSVMerge.Size = new System.Drawing.Size(61, 13);
+            this.LLblCSVMerge.TabIndex = 20;
+            this.LLblCSVMerge.TabStop = true;
+            this.LLblCSVMerge.Text = "CSV Merge";
+            this.LLblCSVMerge.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.LLblCSVMerge_LinkClicked);
+            // 
             // FormMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(456, 488);
             this.ControlBox = false;
+            this.Controls.Add(this.LLblCSVMerge);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.rbValidation);
             this.Controls.Add(this.rbFCR);
@@ -752,6 +766,7 @@
         private System.Windows.Forms.RadioButton rbMovePercent;
         private System.Windows.Forms.RadioButton rbMoveAll;
         private System.Windows.Forms.Button btnUndo;
+        private System.Windows.Forms.LinkLabel LLblCSVMerge;
     }
 }
 

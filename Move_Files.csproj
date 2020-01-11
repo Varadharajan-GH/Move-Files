@@ -56,6 +56,12 @@
   <ItemGroup>
     <Compile Include="FCRModel.cs" />
     <Compile Include="FilesDetail.cs" />
+    <Compile Include="FormCSVMerge.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormCSVMerge.Designer.cs">
+      <DependentUpon>FormCSVMerge.cs</DependentUpon>
+    </Compile>
     <Compile Include="IProcessModel.cs" />
     <Compile Include="ItemDetail.cs" />
     <Compile Include="MainForm.cs">
@@ -70,6 +76,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ValidationModel.cs" />
     <Compile Include="VILModel.cs" />
+    <EmbeddedResource Include="FormCSVMerge.resx">
+      <DependentUpon>FormCSVMerge.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>

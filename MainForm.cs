@@ -477,6 +477,17 @@ namespace Move_Files
             }
         }
 
+        private void LLblCSVMerge_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            FormCSVMerge frmCSVMerge = new FormCSVMerge();
+            frmCSVMerge.Show();
+        }
+
+        private void label2_Click(object sender, EventArgs e)
+        {
+
+        }
+
         #endregion Folder Dialog
 
         #region Tool Control
