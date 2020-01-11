@@ -17,7 +17,7 @@ namespace Move_Files
 
         private string CopiedXMLLog, CopiedTIFLog;
         private string ErrorXMLLog, ErrorTIFLog;
-        private string UndoErrorLog;
+        private string ErrorOnUndo;
 
         private int movedXMLFiles = 0, errorXMLFiles = 0;
         private int movedTIFFiles = 0, errorTIFFiles = 0;
@@ -65,7 +65,7 @@ namespace Move_Files
             bMoveBoth = true;
 
             DateString = DateTime.Now.ToString("yyMMdd");
-            LogPath = Directory.CreateDirectory(Path.GetFullPath("./MoveFilesLogs/")).FullName;
+            LogPath = Directory.CreateDirectory(Path.GetFullPath("./MoveFilesLogs/" + DateString)).FullName;
             btnMove.Enabled = false;
             ValidateLogin();
         }
@@ -275,7 +275,7 @@ namespace Move_Files
             Form inputBox = new Form
             {
                 FormBorderStyle = FormBorderStyle.FixedDialog,
-                ControlBox=false,
+                ControlBox = false,
                 ClientSize = size,
                 Text = "Enter Password"
             };
@@ -500,11 +500,11 @@ namespace Move_Files
             }
             else
             {
-                CopiedXMLLog = Path.Combine(LogPath, $"{processModel.GetCopiedXMLLogPrefix()}_{DateString}.log");
-                CopiedTIFLog = Path.Combine(LogPath, $"{processModel.GetCopiedTIFLogPrefix()}_{DateString}.log");
-                ErrorXMLLog = Path.Combine(LogPath, $"{processModel.GetErrorXMLLogPrefix()}_{DateString}.log");
-                ErrorTIFLog = Path.Combine(LogPath, $"{processModel.GetErrorTIFLogPrefix()}_{DateString}.log");
-                UndoErrorLog = Path.Combine(LogPath, $"UndoError_{DateString}.log");
+                CopiedXMLLog = Path.Combine(LogPath, $"{processModel.GetCopiedXMLLogPrefix()}.log");
+                CopiedTIFLog = Path.Combine(LogPath, $"{processModel.GetCopiedTIFLogPrefix()}.log");
+                ErrorXMLLog = Path.Combine(LogPath, $"{processModel.GetErrorXMLLogPrefix()}.log");
+                ErrorTIFLog = Path.Combine(LogPath, $"{processModel.GetErrorTIFLogPrefix()}.log");
+                ErrorOnUndo = Path.Combine(LogPath, $"ErrorOnUndo.log");
             }
 
             if (!Directory.Exists(textBoxSourceXML.Text))
@@ -630,7 +630,7 @@ namespace Move_Files
                 }
                 catch (Exception)
                 {
-                    File.AppendAllText(UndoErrorLog, Environment.NewLine + $"{DestFiles[i]} => {SourceFiles[i]}");
+                    File.AppendAllText(ErrorOnUndo, Environment.NewLine + $"{DestFiles[i]} => {SourceFiles[i]}");
                 }
             }
             LabelTIFProgress.Text = $"{DestFiles.Count} files moved.";
