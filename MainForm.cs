@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
 namespace Move_Files
@@ -45,6 +46,9 @@ namespace Move_Files
 
         private List<string> SourceFiles;
         private List<string> DestFiles;
+
+        private List<string> ListValid;
+        private List<string> ListInvalid;
 
         #endregion Declaration
         public FormMain()
@@ -478,15 +482,31 @@ namespace Move_Files
             }
         }
 
-        private void LblCSVMerge_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        private void CSVMerge_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             FormCSVMerge frmCSVMerge = new FormCSVMerge();
             frmCSVMerge.Show();
         }
 
-        private void chkFilterAccession_CheckedChanged(object sender, EventArgs e)
+        private void RBFilterAccession_CheckedChanged(object sender, EventArgs e)
         {
+            bFilterAccession = rbFilterAccession.Checked;
+        }
+
+        private void RBFilterItem_CheckedChanged(object sender, EventArgs e)
+        {
+            bFilterItem = rbFilterItem.Checked;
+        }
+
+        private void CBFilterAccession_CheckedChanged(object sender, EventArgs e)
+        {            
             textBoxFilter.Enabled = chkFilter.Checked;
+            rbFilterAccession.Enabled = chkFilter.Checked;
+            rbFilterItem.Enabled = chkFilter.Checked;
+            rbFilterAccession.Checked = false;
+            rbFilterItem.Checked = false;
+            bFilterAccession = false;
+            bFilterItem = false;
         }
 
         #endregion Folder Dialog
@@ -573,8 +593,64 @@ namespace Move_Files
             {
                 if (rbFilterAccession.Checked)
                 {
-
+                    bFilterAccession = true;
+                    ListValid = new List<string>();
+                    ListInvalid = new List<string>();
+                    foreach (string line in textBoxFilter.Lines)
+                    {
+                        if (string.IsNullOrWhiteSpace(line)) continue;
+                        string nLine = Regex.Replace(line, "[^a-zA-Z0-9]", string.Empty).Trim();
+                        if (nLine.Length == 5)
+                        {
+                            ListValid.Add(nLine);
+                        }
+                        else
+                        {
+                            ListInvalid.Add(line);
+                            Console.WriteLine(line + "," + nLine);
+                        }
+                    }
+                    if (ListValid.Count <= 0)
+                    {
+                        MessageBox.Show("No valid Accession filter entries found. No files will be moved.");
+                        return;
+                    }
                 }
+                else if (rbFilterItem.Checked)
+                {
+                    bFilterItem = true;
+                    ListValid = new List<string>();
+                    ListInvalid = new List<string>();
+                    foreach (string line in textBoxFilter.Lines)
+                    {
+                        if (string.IsNullOrWhiteSpace(line)) continue;
+                        string nLine = Regex.Replace(line, "[^a-zA-Z0-9]", string.Empty).Trim();
+                        if (nLine.Length == 9)
+                        {
+                            ListValid.Add(nLine);
+                        }
+                        else
+                        {
+                            ListInvalid.Add(line);
+                            Console.WriteLine(line + "," + nLine);
+                        }
+                    }
+                    if (ListValid.Count <= 0)
+                    {
+                        MessageBox.Show("No valid Item filter entries found. No files will be moved.");
+                        return;
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("Select what to filter. Accession/Item.");
+                    return;
+                }
+                if (ListInvalid.Count > 0)
+                {
+                    MessageBox.Show("Invalid entries found and will not be processed");                    
+                }
+                textBoxFilter.Text = string.Join(Environment.NewLine, ListInvalid.ToArray());
             }
 
             if (!BGWorker.IsBusy)
@@ -670,6 +746,35 @@ namespace Move_Files
                     Status.Text = "No XML files found.";
                     return;
                 }
+
+                List<ItemDetail> newItemDetialList = new List<ItemDetail>();
+
+                if (chkFilter.Checked)
+                {
+                    if (bFilterAccession)
+                    {
+                        foreach (ItemDetail item in itemDetialList)
+                        {
+                            if (ListValid.Contains(item.ItemName.Substring(0, 5)))
+                            {
+                                newItemDetialList.Add(item);
+                            }
+                        }
+                        itemDetialList = newItemDetialList;
+                    }
+                    else if (bFilterItem)
+                    {
+                        foreach (ItemDetail item in itemDetialList)
+                        {
+                            if (ListValid.Contains(item.ItemName.Substring(0, 9)))
+                            {
+                                newItemDetialList.Add(item);
+                            }
+                        }
+                        itemDetialList = newItemDetialList;
+                    }
+                }
+
                 totalXMLFiles = itemDetialList.Count;
                 totalXMLSize = itemDetialList.Sum(f => f.XmlSize);
                 totalTIFFiles = itemDetialList.Sum(f => f.TifDetail.filesList.Count);

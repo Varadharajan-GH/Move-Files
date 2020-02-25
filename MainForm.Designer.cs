@@ -57,6 +57,9 @@
             this.panel1 = new System.Windows.Forms.Panel();
             this.btnUndo = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.rbFilterItem = new System.Windows.Forms.RadioButton();
+            this.rbFilterAccession = new System.Windows.Forms.RadioButton();
             this.textBoxFilter = new System.Windows.Forms.TextBox();
             this.chkFilter = new System.Windows.Forms.CheckBox();
             this.panel2 = new System.Windows.Forms.Panel();
@@ -86,17 +89,14 @@
             this.rbValidation = new System.Windows.Forms.RadioButton();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.LblCSVMerge = new System.Windows.Forms.LinkLabel();
-            this.groupBox3 = new System.Windows.Forms.GroupBox();
-            this.rbFilterAccession = new System.Windows.Forms.RadioButton();
-            this.rbFilterItem = new System.Windows.Forms.RadioButton();
             this.ToolStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.ErrorProvider)).BeginInit();
             this.panel1.SuspendLayout();
             this.groupBox1.SuspendLayout();
+            this.groupBox3.SuspendLayout();
             this.panel2.SuspendLayout();
             this.panelTitleBar.SuspendLayout();
             this.groupBox2.SuspendLayout();
-            this.groupBox3.SuspendLayout();
             this.SuspendLayout();
             // 
             // LabelClose
@@ -398,6 +398,42 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Options";
             // 
+            // groupBox3
+            // 
+            this.groupBox3.Controls.Add(this.rbFilterItem);
+            this.groupBox3.Controls.Add(this.rbFilterAccession);
+            this.groupBox3.Location = new System.Drawing.Point(243, 40);
+            this.groupBox3.Name = "groupBox3";
+            this.groupBox3.Size = new System.Drawing.Size(139, 30);
+            this.groupBox3.TabIndex = 24;
+            this.groupBox3.TabStop = false;
+            // 
+            // rbFilterItem
+            // 
+            this.rbFilterItem.AutoSize = true;
+            this.rbFilterItem.Enabled = false;
+            this.rbFilterItem.Location = new System.Drawing.Point(87, 8);
+            this.rbFilterItem.Name = "rbFilterItem";
+            this.rbFilterItem.Size = new System.Drawing.Size(45, 17);
+            this.rbFilterItem.TabIndex = 1;
+            this.rbFilterItem.TabStop = true;
+            this.rbFilterItem.Text = "Item";
+            this.rbFilterItem.UseVisualStyleBackColor = true;
+            this.rbFilterItem.CheckedChanged += new System.EventHandler(this.RBFilterItem_CheckedChanged);
+            // 
+            // rbFilterAccession
+            // 
+            this.rbFilterAccession.AutoSize = true;
+            this.rbFilterAccession.Enabled = false;
+            this.rbFilterAccession.Location = new System.Drawing.Point(1, 8);
+            this.rbFilterAccession.Name = "rbFilterAccession";
+            this.rbFilterAccession.Size = new System.Drawing.Size(74, 17);
+            this.rbFilterAccession.TabIndex = 0;
+            this.rbFilterAccession.TabStop = true;
+            this.rbFilterAccession.Text = "Accession";
+            this.rbFilterAccession.UseVisualStyleBackColor = true;
+            this.rbFilterAccession.CheckedChanged += new System.EventHandler(this.RBFilterAccession_CheckedChanged);
+            // 
             // textBoxFilter
             // 
             this.textBoxFilter.Enabled = false;
@@ -417,7 +453,7 @@
             this.chkFilter.TabIndex = 22;
             this.chkFilter.Text = "Filter";
             this.chkFilter.UseVisualStyleBackColor = true;
-            this.chkFilter.CheckedChanged += new System.EventHandler(this.chkFilterAccession_CheckedChanged);
+            this.chkFilter.CheckedChanged += new System.EventHandler(this.CBFilterAccession_CheckedChanged);
             // 
             // panel2
             // 
@@ -699,39 +735,7 @@
             this.LblCSVMerge.TabIndex = 20;
             this.LblCSVMerge.TabStop = true;
             this.LblCSVMerge.Text = "CSV Merge";
-            this.LblCSVMerge.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.LblCSVMerge_LinkClicked);
-            // 
-            // groupBox3
-            // 
-            this.groupBox3.Controls.Add(this.rbFilterItem);
-            this.groupBox3.Controls.Add(this.rbFilterAccession);
-            this.groupBox3.Location = new System.Drawing.Point(243, 40);
-            this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(139, 30);
-            this.groupBox3.TabIndex = 24;
-            this.groupBox3.TabStop = false;
-            // 
-            // rbFilterAccession
-            // 
-            this.rbFilterAccession.AutoSize = true;
-            this.rbFilterAccession.Location = new System.Drawing.Point(1, 8);
-            this.rbFilterAccession.Name = "rbFilterAccession";
-            this.rbFilterAccession.Size = new System.Drawing.Size(74, 17);
-            this.rbFilterAccession.TabIndex = 0;
-            this.rbFilterAccession.TabStop = true;
-            this.rbFilterAccession.Text = "Accession";
-            this.rbFilterAccession.UseVisualStyleBackColor = true;
-            // 
-            // rbFilterItem
-            // 
-            this.rbFilterItem.AutoSize = true;
-            this.rbFilterItem.Location = new System.Drawing.Point(87, 8);
-            this.rbFilterItem.Name = "rbFilterItem";
-            this.rbFilterItem.Size = new System.Drawing.Size(45, 17);
-            this.rbFilterItem.TabIndex = 1;
-            this.rbFilterItem.TabStop = true;
-            this.rbFilterItem.Text = "Item";
-            this.rbFilterItem.UseVisualStyleBackColor = true;
+            this.LblCSVMerge.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.CSVMerge_LinkClicked);
             // 
             // FormMain
             // 
@@ -760,14 +764,14 @@
             this.panel1.PerformLayout();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
+            this.groupBox3.ResumeLayout(false);
+            this.groupBox3.PerformLayout();
             this.panel2.ResumeLayout(false);
             this.panel2.PerformLayout();
             this.panelTitleBar.ResumeLayout(false);
             this.panelTitleBar.PerformLayout();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
-            this.groupBox3.ResumeLayout(false);
-            this.groupBox3.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
