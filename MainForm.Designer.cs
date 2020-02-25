@@ -57,6 +57,8 @@
             this.panel1 = new System.Windows.Forms.Panel();
             this.btnUndo = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.textBoxFilter = new System.Windows.Forms.TextBox();
+            this.chkFilter = new System.Windows.Forms.CheckBox();
             this.panel2 = new System.Windows.Forms.Panel();
             this.label12 = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
@@ -83,7 +85,10 @@
             this.rbFCR = new System.Windows.Forms.RadioButton();
             this.rbValidation = new System.Windows.Forms.RadioButton();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.LLblCSVMerge = new System.Windows.Forms.LinkLabel();
+            this.LblCSVMerge = new System.Windows.Forms.LinkLabel();
+            this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.rbFilterAccession = new System.Windows.Forms.RadioButton();
+            this.rbFilterItem = new System.Windows.Forms.RadioButton();
             this.ToolStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.ErrorProvider)).BeginInit();
             this.panel1.SuspendLayout();
@@ -91,6 +96,7 @@
             this.panel2.SuspendLayout();
             this.panelTitleBar.SuspendLayout();
             this.groupBox2.SuspendLayout();
+            this.groupBox3.SuspendLayout();
             this.SuspendLayout();
             // 
             // LabelClose
@@ -124,17 +130,16 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(27, 34);
+            this.label2.Location = new System.Drawing.Point(27, 27);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(70, 13);
             this.label2.TabIndex = 2;
             this.label2.Text = "XML Folder : ";
-            this.label2.Click += new System.EventHandler(this.label2_Click);
             // 
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(27, 65);
+            this.label3.Location = new System.Drawing.Point(27, 53);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(64, 13);
             this.label3.TabIndex = 2;
@@ -151,7 +156,7 @@
             // 
             // textBoxSourceTIF
             // 
-            this.textBoxSourceTIF.Location = new System.Drawing.Point(98, 61);
+            this.textBoxSourceTIF.Location = new System.Drawing.Point(98, 49);
             this.textBoxSourceTIF.Name = "textBoxSourceTIF";
             this.textBoxSourceTIF.Size = new System.Drawing.Size(280, 20);
             this.textBoxSourceTIF.TabIndex = 4;
@@ -159,7 +164,7 @@
             // 
             // textBoxSourceXML
             // 
-            this.textBoxSourceXML.Location = new System.Drawing.Point(98, 31);
+            this.textBoxSourceXML.Location = new System.Drawing.Point(98, 24);
             this.textBoxSourceXML.Name = "textBoxSourceXML";
             this.textBoxSourceXML.Size = new System.Drawing.Size(280, 20);
             this.textBoxSourceXML.TabIndex = 4;
@@ -169,7 +174,7 @@
             // 
             this.btnChooseSourceXML.AutoSize = true;
             this.btnChooseSourceXML.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnChooseSourceXML.Location = new System.Drawing.Point(401, 29);
+            this.btnChooseSourceXML.Location = new System.Drawing.Point(401, 22);
             this.btnChooseSourceXML.Name = "btnChooseSourceXML";
             this.btnChooseSourceXML.Size = new System.Drawing.Size(29, 23);
             this.btnChooseSourceXML.TabIndex = 5;
@@ -183,7 +188,7 @@
             // 
             this.btnChooseSourceTIF.AutoSize = true;
             this.btnChooseSourceTIF.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnChooseSourceTIF.Location = new System.Drawing.Point(401, 58);
+            this.btnChooseSourceTIF.Location = new System.Drawing.Point(401, 46);
             this.btnChooseSourceTIF.Name = "btnChooseSourceTIF";
             this.btnChooseSourceTIF.Size = new System.Drawing.Size(29, 23);
             this.btnChooseSourceTIF.TabIndex = 6;
@@ -196,7 +201,7 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(27, 125);
+            this.label5.Location = new System.Drawing.Point(27, 95);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(70, 13);
             this.label5.TabIndex = 2;
@@ -205,7 +210,7 @@
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(27, 156);
+            this.label6.Location = new System.Drawing.Point(27, 121);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(64, 13);
             this.label6.TabIndex = 2;
@@ -214,7 +219,7 @@
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(10, 97);
+            this.label7.Location = new System.Drawing.Point(10, 75);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(56, 13);
             this.label7.TabIndex = 3;
@@ -222,7 +227,7 @@
             // 
             // textBoxDestTIF
             // 
-            this.textBoxDestTIF.Location = new System.Drawing.Point(98, 152);
+            this.textBoxDestTIF.Location = new System.Drawing.Point(98, 117);
             this.textBoxDestTIF.Name = "textBoxDestTIF";
             this.textBoxDestTIF.Size = new System.Drawing.Size(280, 20);
             this.textBoxDestTIF.TabIndex = 4;
@@ -230,7 +235,7 @@
             // 
             // textBoxDestXML
             // 
-            this.textBoxDestXML.Location = new System.Drawing.Point(98, 122);
+            this.textBoxDestXML.Location = new System.Drawing.Point(98, 92);
             this.textBoxDestXML.Name = "textBoxDestXML";
             this.textBoxDestXML.Size = new System.Drawing.Size(280, 20);
             this.textBoxDestXML.TabIndex = 4;
@@ -240,7 +245,7 @@
             // 
             this.btnChooseDestXML.AutoSize = true;
             this.btnChooseDestXML.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnChooseDestXML.Location = new System.Drawing.Point(401, 120);
+            this.btnChooseDestXML.Location = new System.Drawing.Point(401, 90);
             this.btnChooseDestXML.Name = "btnChooseDestXML";
             this.btnChooseDestXML.Size = new System.Drawing.Size(29, 23);
             this.btnChooseDestXML.TabIndex = 5;
@@ -254,7 +259,7 @@
             // 
             this.btnChooseDestTIF.AutoSize = true;
             this.btnChooseDestTIF.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnChooseDestTIF.Location = new System.Drawing.Point(401, 149);
+            this.btnChooseDestTIF.Location = new System.Drawing.Point(401, 114);
             this.btnChooseDestTIF.Name = "btnChooseDestTIF";
             this.btnChooseDestTIF.Size = new System.Drawing.Size(29, 23);
             this.btnChooseDestTIF.TabIndex = 6;
@@ -377,18 +382,42 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.groupBox3);
+            this.groupBox1.Controls.Add(this.textBoxFilter);
+            this.groupBox1.Controls.Add(this.chkFilter);
             this.groupBox1.Controls.Add(this.panel2);
             this.groupBox1.Controls.Add(this.comboFilesToMove);
             this.groupBox1.Controls.Add(this.label9);
             this.groupBox1.Controls.Add(this.cbCreateTIFLog);
             this.groupBox1.Controls.Add(this.cbCreateXMLLog);
             this.groupBox1.Controls.Add(this.label11);
-            this.groupBox1.Location = new System.Drawing.Point(7, 182);
+            this.groupBox1.Location = new System.Drawing.Point(7, 143);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(432, 90);
+            this.groupBox1.Size = new System.Drawing.Size(432, 129);
             this.groupBox1.TabIndex = 20;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Options";
+            // 
+            // textBoxFilter
+            // 
+            this.textBoxFilter.Enabled = false;
+            this.textBoxFilter.Location = new System.Drawing.Point(190, 71);
+            this.textBoxFilter.Multiline = true;
+            this.textBoxFilter.Name = "textBoxFilter";
+            this.textBoxFilter.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.textBoxFilter.Size = new System.Drawing.Size(233, 52);
+            this.textBoxFilter.TabIndex = 23;
+            // 
+            // chkFilter
+            // 
+            this.chkFilter.AutoSize = true;
+            this.chkFilter.Location = new System.Drawing.Point(190, 49);
+            this.chkFilter.Name = "chkFilter";
+            this.chkFilter.Size = new System.Drawing.Size(48, 17);
+            this.chkFilter.TabIndex = 22;
+            this.chkFilter.Text = "Filter";
+            this.chkFilter.UseVisualStyleBackColor = true;
+            this.chkFilter.CheckedChanged += new System.EventHandler(this.chkFilterAccession_CheckedChanged);
             // 
             // panel2
             // 
@@ -399,7 +428,7 @@
             this.panel2.Controls.Add(this.rbMoveCount);
             this.panel2.Controls.Add(this.rbMovePercent);
             this.panel2.Controls.Add(this.rbMoveAll);
-            this.panel2.Location = new System.Drawing.Point(287, 11);
+            this.panel2.Location = new System.Drawing.Point(6, 50);
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(140, 73);
             this.panel2.TabIndex = 21;
@@ -477,9 +506,9 @@
             "Both XML and TIF",
             "XML only",
             "TIF only"});
-            this.comboFilesToMove.Location = new System.Drawing.Point(62, 44);
+            this.comboFilesToMove.Location = new System.Drawing.Point(243, 19);
             this.comboFilesToMove.Name = "comboFilesToMove";
-            this.comboFilesToMove.Size = new System.Drawing.Size(138, 21);
+            this.comboFilesToMove.Size = new System.Drawing.Size(180, 21);
             this.comboFilesToMove.TabIndex = 20;
             this.comboFilesToMove.SelectedIndexChanged += new System.EventHandler(this.ComboFilesToMove_SelectedIndexChanged);
             // 
@@ -495,11 +524,11 @@
             // cbCreateTIFLog
             // 
             this.cbCreateTIFLog.AutoSize = true;
-            this.cbCreateTIFLog.Location = new System.Drawing.Point(152, 21);
+            this.cbCreateTIFLog.Location = new System.Drawing.Point(130, 21);
             this.cbCreateTIFLog.Name = "cbCreateTIFLog";
-            this.cbCreateTIFLog.Size = new System.Drawing.Size(66, 17);
+            this.cbCreateTIFLog.Size = new System.Drawing.Size(42, 17);
             this.cbCreateTIFLog.TabIndex = 11;
-            this.cbCreateTIFLog.Text = "TIF Files";
+            this.cbCreateTIFLog.Text = "TIF";
             this.cbCreateTIFLog.UseVisualStyleBackColor = true;
             this.cbCreateTIFLog.CheckedChanged += new System.EventHandler(this.CreateTIFLog_CheckedChanged);
             // 
@@ -508,16 +537,16 @@
             this.cbCreateXMLLog.AutoSize = true;
             this.cbCreateXMLLog.Location = new System.Drawing.Point(85, 21);
             this.cbCreateXMLLog.Name = "cbCreateXMLLog";
-            this.cbCreateXMLLog.Size = new System.Drawing.Size(72, 17);
+            this.cbCreateXMLLog.Size = new System.Drawing.Size(48, 17);
             this.cbCreateXMLLog.TabIndex = 11;
-            this.cbCreateXMLLog.Text = "XML Files";
+            this.cbCreateXMLLog.Text = "XML";
             this.cbCreateXMLLog.UseVisualStyleBackColor = true;
             this.cbCreateXMLLog.CheckedChanged += new System.EventHandler(this.CreateXMLLog_CheckedChanged);
             // 
             // label11
             // 
             this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(6, 46);
+            this.label11.Location = new System.Drawing.Point(187, 21);
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(50, 13);
             this.label11.TabIndex = 19;
@@ -661,16 +690,48 @@
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Progress";
             // 
-            // LLblCSVMerge
+            // LblCSVMerge
             // 
-            this.LLblCSVMerge.AutoSize = true;
-            this.LLblCSVMerge.Location = new System.Drawing.Point(395, 30);
-            this.LLblCSVMerge.Name = "LLblCSVMerge";
-            this.LLblCSVMerge.Size = new System.Drawing.Size(61, 13);
-            this.LLblCSVMerge.TabIndex = 20;
-            this.LLblCSVMerge.TabStop = true;
-            this.LLblCSVMerge.Text = "CSV Merge";
-            this.LLblCSVMerge.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.LLblCSVMerge_LinkClicked);
+            this.LblCSVMerge.AutoSize = true;
+            this.LblCSVMerge.Location = new System.Drawing.Point(395, 30);
+            this.LblCSVMerge.Name = "LblCSVMerge";
+            this.LblCSVMerge.Size = new System.Drawing.Size(61, 13);
+            this.LblCSVMerge.TabIndex = 20;
+            this.LblCSVMerge.TabStop = true;
+            this.LblCSVMerge.Text = "CSV Merge";
+            this.LblCSVMerge.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.LblCSVMerge_LinkClicked);
+            // 
+            // groupBox3
+            // 
+            this.groupBox3.Controls.Add(this.rbFilterItem);
+            this.groupBox3.Controls.Add(this.rbFilterAccession);
+            this.groupBox3.Location = new System.Drawing.Point(243, 40);
+            this.groupBox3.Name = "groupBox3";
+            this.groupBox3.Size = new System.Drawing.Size(139, 30);
+            this.groupBox3.TabIndex = 24;
+            this.groupBox3.TabStop = false;
+            // 
+            // rbFilterAccession
+            // 
+            this.rbFilterAccession.AutoSize = true;
+            this.rbFilterAccession.Location = new System.Drawing.Point(1, 8);
+            this.rbFilterAccession.Name = "rbFilterAccession";
+            this.rbFilterAccession.Size = new System.Drawing.Size(74, 17);
+            this.rbFilterAccession.TabIndex = 0;
+            this.rbFilterAccession.TabStop = true;
+            this.rbFilterAccession.Text = "Accession";
+            this.rbFilterAccession.UseVisualStyleBackColor = true;
+            // 
+            // rbFilterItem
+            // 
+            this.rbFilterItem.AutoSize = true;
+            this.rbFilterItem.Location = new System.Drawing.Point(87, 8);
+            this.rbFilterItem.Name = "rbFilterItem";
+            this.rbFilterItem.Size = new System.Drawing.Size(45, 17);
+            this.rbFilterItem.TabIndex = 1;
+            this.rbFilterItem.TabStop = true;
+            this.rbFilterItem.Text = "Item";
+            this.rbFilterItem.UseVisualStyleBackColor = true;
             // 
             // FormMain
             // 
@@ -678,7 +739,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(456, 488);
             this.ControlBox = false;
-            this.Controls.Add(this.LLblCSVMerge);
+            this.Controls.Add(this.LblCSVMerge);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.rbValidation);
             this.Controls.Add(this.rbFCR);
@@ -705,6 +766,8 @@
             this.panelTitleBar.PerformLayout();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
+            this.groupBox3.ResumeLayout(false);
+            this.groupBox3.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -766,7 +829,12 @@
         private System.Windows.Forms.RadioButton rbMovePercent;
         private System.Windows.Forms.RadioButton rbMoveAll;
         private System.Windows.Forms.Button btnUndo;
-        private System.Windows.Forms.LinkLabel LLblCSVMerge;
+        private System.Windows.Forms.LinkLabel LblCSVMerge;
+        private System.Windows.Forms.TextBox textBoxFilter;
+        private System.Windows.Forms.CheckBox chkFilter;
+        private System.Windows.Forms.GroupBox groupBox3;
+        private System.Windows.Forms.RadioButton rbFilterItem;
+        private System.Windows.Forms.RadioButton rbFilterAccession;
     }
 }
 

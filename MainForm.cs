@@ -34,6 +34,7 @@ namespace Move_Files
         private bool bEnableXMLLog, bEnableTIFLog;
         private bool bMoveXMLOnly, bMoveTIFOnly, bMoveBoth;
         private bool bWindowMoving;
+        private bool bFilterAccession, bFilterItem;
 
         private int Sx, Sy, Ex, Ey;
 
@@ -477,15 +478,15 @@ namespace Move_Files
             }
         }
 
-        private void LLblCSVMerge_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        private void LblCSVMerge_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             FormCSVMerge frmCSVMerge = new FormCSVMerge();
             frmCSVMerge.Show();
         }
 
-        private void label2_Click(object sender, EventArgs e)
+        private void chkFilterAccession_CheckedChanged(object sender, EventArgs e)
         {
-
+            textBoxFilter.Enabled = chkFilter.Checked;
         }
 
         #endregion Folder Dialog
@@ -566,6 +567,14 @@ namespace Move_Files
                 settings.WriteSetting(processModel.GetSourceTIFPathKey(), SourceTIFFolder);
                 settings.WriteSetting(processModel.GetDestXMLPathKey(), DestXMLFolder);
                 settings.WriteSetting(processModel.GetDestTIFPathKey(), DestTIFFolder);
+            }
+
+            if (chkFilter.Checked)
+            {
+                if (rbFilterAccession.Checked)
+                {
+
+                }
             }
 
             if (!BGWorker.IsBusy)
