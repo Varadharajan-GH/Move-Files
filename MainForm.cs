@@ -11,6 +11,7 @@ namespace Move_Files
     public partial class FormMain : Form
     {
         #region Declaration
+        private const int MAX_MOVE_COUNT = 50;
         private string SourceXMLFolder, SourceTIFFolder;
 
         private string DestXMLFolder, DestTIFFolder;
@@ -44,6 +45,7 @@ namespace Move_Files
 
         private List<string> SourceFiles;
         private List<string> DestFiles;
+        private static int GlobalMoveCount;
 
         #endregion Declaration
         public FormMain()
@@ -58,6 +60,7 @@ namespace Move_Files
             timer = new System.Diagnostics.Stopwatch();
 
             ReadSettings();
+            GlobalMoveCount = 0;
 
             comboFilesToMove.SelectedIndex = 0;
             bMoveXMLOnly = false;
@@ -107,9 +110,9 @@ namespace Move_Files
                         Environment.Exit(0);
                         throw;
                     }
-                    DateTime expireDateTime = new DateTime(2020, 3, 27);
+                    DateTime expireDateTime = new DateTime(2020, 4, 26, 23, 59, 59);
 
-                    if (expireDateTime.Subtract(nistDateTime).Days > 0)
+                    if (expireDateTime.Subtract(nistDateTime).Seconds > 0)
                     {
                         btnMove.Enabled = true;
                     }
@@ -364,13 +367,13 @@ namespace Move_Files
             HelpText.AppendLine($"   Version : {version}");
             HelpText.AppendLine($"   Build Date : {buildDate}");
             HelpText.AppendLine();
-            HelpText.AppendLine("   This program will move all XML files from source XML folder");
+            HelpText.AppendLine("This program will move all XML files from source XML folder");
             HelpText.AppendLine("to target XML folder and their corresponding TIF files from");
             HelpText.AppendLine("source TIF folder to target TIF folder.");
             HelpText.AppendLine();
-            HelpText.AppendLine("   Tool will also create logs for Moved files in Log folder");
+            HelpText.AppendLine("Tool will also create logs for Moved files in Log folder.");
             HelpText.AppendLine();
-            HelpText.AppendLine();
+            HelpText.AppendLine("Valid till Midnight of April 26,2020");
             HelpText.AppendLine("Reach developer at varadhamca.1887@gmail.com");
             MessageBox.Show(HelpText.ToString(), "Move Files", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
@@ -493,6 +496,11 @@ namespace Move_Files
         #region Tool Control
         private void Move_Click(object sender, EventArgs e)
         {
+            if (GlobalMoveCount >= MAX_MOVE_COUNT)
+            {
+                MessageBox.Show("Usage limit reached. Application needs to Restarted now. Reopen again.");
+                return;
+            }
             if (processModel == null)
             {
                 MessageBox.Show("You must select either VIL or FCR", "Select Process", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -579,6 +587,7 @@ namespace Move_Files
                 Status.Text = "Moving";
                 SourceFiles = new List<string>();
                 DestFiles = new List<string>();
+                GlobalMoveCount += 1;
                 BGWorker.RunWorkerAsync();
             }
         }
@@ -1019,7 +1028,7 @@ namespace Move_Files
                     LabelMoveSize.Text = $"{(float)totalCopiedSize / (1024 * 1024)} MB moved in {timer.Elapsed.TotalSeconds} seconds at {((float)totalCopiedSize / (1024 * 1024 * timer.Elapsed.TotalSeconds)).ToString("00.00")} MBps";
                     MessageBox.Show($"Task complete for {processModel.GetProcessName()} process.");
                 }
-            }
+            }            
         }
         #endregion BG Worker
 
